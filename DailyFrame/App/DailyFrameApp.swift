@@ -8,23 +8,16 @@ struct DailyFrameApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     #endif
 
-    @StateObject private var videoManager = VideoManagerViewModel()
+    @State private var library = VideoLibrary()
 
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .environmentObject(videoManager)
+                .environment(\.videoLibrary, library)
         }
         #if os(macOS)
         .commands {
             CommandGroup(replacing: .newItem) {}
-            CommandMenu("Video") {
-                Button("Export Current Video") {
-                    videoManager.triggerExport()
-                }
-                .keyboardShortcut("e", modifiers: .command)
-                .disabled(videoManager.currentVideo == nil)
-            }
         }
         #endif
     }

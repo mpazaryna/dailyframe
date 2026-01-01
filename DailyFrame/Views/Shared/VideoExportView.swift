@@ -4,7 +4,10 @@ struct VideoExportView: View {
     let videoURL: URL
     let onDismiss: () -> Void
 
-    @StateObject private var exportViewModel = ExportViewModel()
+    @State private var showError = false
+    @State private var errorMessage = ""
+
+    private let exportService = VideoExportService.shared
 
     var body: some View {
         VStack(spacing: 24) {
@@ -33,7 +36,7 @@ struct VideoExportView: View {
                     systemImage: "square.and.arrow.up"
                 ) {
                     Task {
-                        await exportViewModel.exportVideo(at: videoURL)
+                        await shareVideo()
                     }
                 }
 
@@ -44,7 +47,7 @@ struct VideoExportView: View {
                     systemImage: "folder"
                 ) {
                     Task {
-                        _ = await exportViewModel.saveVideoToLocation(from: videoURL)
+                        await saveToLocation()
                     }
                 }
                 #endif
@@ -63,14 +66,35 @@ struct VideoExportView: View {
         .frame(minWidth: 300, minHeight: 350)
         .background(.ultraThinMaterial)
         .glassEffect()
-        .alert("Export Error", isPresented: $exportViewModel.showError) {
+        .alert("Export Error", isPresented: $showError) {
             Button("OK") {
-                exportViewModel.reset()
+                showError = false
+                errorMessage = ""
             }
         } message: {
-            Text(exportViewModel.errorMessage)
+            Text(errorMessage)
         }
     }
+
+    private func shareVideo() async {
+        do {
+            try await exportService.exportVideo(at: videoURL)
+        } catch {
+            errorMessage = error.localizedDescription
+            showError = true
+        }
+    }
+
+    #if os(macOS)
+    private func saveToLocation() async {
+        do {
+            _ = try await exportService.saveVideoToLocation(from: videoURL)
+        } catch {
+            errorMessage = error.localizedDescription
+            showError = true
+        }
+    }
+    #endif
 }
 
 struct ExportOptionButton: View {

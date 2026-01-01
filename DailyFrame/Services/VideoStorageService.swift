@@ -40,21 +40,15 @@ actor VideoStorageService {
         return videosDirectoryURL
     }
 
-    func videoURL(for date: Date) async -> URL? {
-        guard let directory = await getVideosDirectory() else { return nil }
-        let fileName = DateUtilities.fileName(for: date)
-        return directory.appendingPathComponent(fileName)
-    }
-
-    func saveVideo(from temporaryURL: URL, for date: Date) async throws -> URL {
+    func saveVideo(from temporaryURL: URL, for date: Date, takeNumber: Int) async throws -> URL {
         guard let directory = await getVideosDirectory() else {
             throw AppError.iCloudContainerNotFound
         }
 
-        let fileName = DateUtilities.fileName(for: date)
+        let fileName = DateUtilities.fileName(for: date, takeNumber: takeNumber)
         let destinationURL = directory.appendingPathComponent(fileName)
 
-        // Remove existing file if present
+        // Remove existing file if present (shouldn't happen with unique take numbers)
         if FileManager.default.fileExists(atPath: destinationURL.path) {
             try FileManager.default.removeItem(at: destinationURL)
         }
@@ -65,18 +59,29 @@ actor VideoStorageService {
         return destinationURL
     }
 
-    func deleteVideo(for date: Date) async throws {
-        guard let url = await videoURL(for: date),
-              FileManager.default.fileExists(atPath: url.path) else {
+    func deleteTake(_ take: VideoTake) async throws {
+        guard FileManager.default.fileExists(atPath: take.videoURL.path) else {
             return
         }
-
-        try FileManager.default.removeItem(at: url)
+        try FileManager.default.removeItem(at: take.videoURL)
     }
 
-    func videoExists(for date: Date) async -> Bool {
-        guard let url = await videoURL(for: date) else { return false }
-        return FileManager.default.fileExists(atPath: url.path)
+    func deleteAllTakes(for date: Date) async throws {
+        guard let directory = await getVideosDirectory() else { return }
+
+        let contents = try FileManager.default.contentsOfDirectory(
+            at: directory,
+            includingPropertiesForKeys: nil,
+            options: .skipsHiddenFiles
+        )
+
+        let dateString = DateUtilities.fileNameFormatter.string(from: Calendar.current.startOfDay(for: date))
+
+        for url in contents {
+            if url.lastPathComponent.hasPrefix("video_\(dateString)_") {
+                try FileManager.default.removeItem(at: url)
+            }
+        }
     }
 
     func loadAllVideos() async -> [VideoDay] {
@@ -89,15 +94,35 @@ actor VideoStorageService {
                 options: .skipsHiddenFiles
             )
 
-            return contents.compactMap { url -> VideoDay? in
+            // Group takes by date
+            var daysByDate: [Date: VideoDay] = [:]
+
+            for url in contents {
                 guard url.pathExtension == "mov",
-                      let date = DateUtilities.date(from: url.lastPathComponent) else {
-                    return nil
+                      let parsed = DateUtilities.parseFileName(url.lastPathComponent) else {
+                    continue
                 }
 
-                let createdAt = (try? url.resourceValues(forKeys: [.creationDateKey]).creationDate) ?? date
-                return VideoDay(date: date, videoURL: url, createdAt: createdAt)
-            }.sorted { $0.date > $1.date }
+                let normalizedDate = Calendar.current.startOfDay(for: parsed.date)
+                let createdAt = (try? url.resourceValues(forKeys: [.creationDateKey]).creationDate) ?? parsed.date
+
+                let take = VideoTake(
+                    date: normalizedDate,
+                    takeNumber: parsed.takeNumber,
+                    videoURL: url,
+                    createdAt: createdAt
+                )
+
+                if var day = daysByDate[normalizedDate] {
+                    day.takes.append(take)
+                    day.takes.sort { $0.takeNumber < $1.takeNumber }
+                    daysByDate[normalizedDate] = day
+                } else {
+                    daysByDate[normalizedDate] = VideoDay(date: normalizedDate, takes: [take])
+                }
+            }
+
+            return daysByDate.values.sorted { $0.date > $1.date }
         } catch {
             return []
         }
@@ -105,10 +130,15 @@ actor VideoStorageService {
 
     func getTodaysVideo() async -> VideoDay? {
         let today = DateUtilities.startOfDay()
-        guard let url = await videoURL(for: today),
-              FileManager.default.fileExists(atPath: url.path) else {
-            return nil
+        let allVideos = await loadAllVideos()
+        return allVideos.first { Calendar.current.isDate($0.date, inSameDayAs: today) }
+    }
+
+    func getNextTakeNumber(for date: Date) async -> Int {
+        guard let todayVideo = await getTodaysVideo(),
+              Calendar.current.isDate(todayVideo.date, inSameDayAs: date) else {
+            return 1
         }
-        return VideoDay(date: today, videoURL: url)
+        return todayVideo.nextTakeNumber
     }
 }

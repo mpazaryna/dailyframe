@@ -45,48 +45,102 @@ Uses Apple's LiquidGlass design language (WWDC 2025) with `.glassEffect()` modif
 
 2. **Universal App with iCloud Sync (ADR-002):** Single codebase for all platforms. Videos stored in iCloud Documents container (`iCloud.com.paz.dailyframe`) with automatic cross-device sync.
 
+3. **No MVVM Pattern (ADR-003):** Views own their state directly using `@State` with `ViewState` enums. Services are `@Observable` classes injected via `@Environment`. See `ai_docs/no-mvvm.md` for rationale.
+
+4. **Centralized Platform Config (ADR-004):** All platform-adaptive layouts defined in `Configuration/PlatformConfig.swift` using composition with flattening pattern. Views use `horizontalSizeClass` on iOS and static configs on macOS. NO device-specific view folders.
+
 ### Project Structure
 ```
 DailyFrame/
 ├── App/                  # Entry point, AppDelegate
+├── Configuration/
+│   └── PlatformConfig.swift  # All platform-adaptive configs
 ├── Views/
-│   ├── iPhone/           # IPhoneRecordingView
-│   ├── iPad/             # IPadRecordingView (split-view)
-│   ├── Mac/              # MacRecordingView (window-based)
-│   └── Shared/           # VideoRecorderView, VideoQAView, VideoExportView
-├── ViewModels/           # VideoManagerViewModel, ExportViewModel
-├── Models/               # VideoDay, AppError, SyncState
+│   ├── ContentView.swift     # Root view
+│   ├── HomeView.swift        # Unified home (adapts to all platforms)
+│   ├── RecordingView.swift   # Unified recording (iOS only)
+│   └── Shared/               # VideoQAView, VideoExportView, SyncStatusView
+├── Models/               # VideoDay, VideoTake, AppError, SyncState
 ├── Services/
-│   ├── VideoStorageService    # iCloud file I/O
-│   ├── iCloudSyncService      # NSFileCoordinator/NSFilePresenter
-│   ├── CameraService          # AVFoundation (iOS/iPadOS only)
-│   └── VideoExportService     # UIActivityViewController
+│   ├── VideoLibrary          # @Observable main service (Environment injection)
+│   ├── VideoStorageService   # iCloud file I/O
+│   ├── iCloudSyncService     # NSFileCoordinator/NSFilePresenter
+│   ├── CameraService         # @Observable AVFoundation (iOS only)
+│   └── VideoExportService    # UIActivityViewController
 └── Utilities/            # DateUtilities, PlatformDetection, PermissionManager
+```
+
+### Platform Config Pattern
+
+All views use centralized config structs that flatten base properties:
+
+```swift
+// In Configuration/PlatformConfig.swift
+struct HomeLayoutConfig {
+    // Flattened base properties
+    let cardPadding: CGFloat
+    let sectionSpacing: CGFloat
+    // View-specific properties
+    let heroIconSize: CGFloat
+    let recordButtonSize: CGFloat
+
+    #if os(iOS)
+    static func current(_ sizeClass: UserInterfaceSizeClass?) -> Self {
+        sizeClass == .regular
+            ? Self(/* iPad values */)
+            : Self(/* iPhone values */)
+    }
+    #else
+    static var current: Self { /* macOS values */ }
+    #endif
+}
+
+// In Views
+struct HomeView: View {
+    #if os(iOS)
+    @Environment(\.horizontalSizeClass) private var sizeClass
+    private var config: HomeLayoutConfig { HomeLayoutConfig.current(sizeClass) }
+    #else
+    private var config: HomeLayoutConfig { HomeLayoutConfig.current }
+    #endif
+
+    var body: some View {
+        // Use config.cardPadding, config.heroIconSize, etc.
+    }
+}
 ```
 
 ### Platform-Specific Code
 Use conditional compilation for platform differences:
-- `#if os(iOS)` - Camera access (iOS/iPadOS only)
-- `#if os(macOS)` - NSOpenPanel, menu bar
-- Camera recording only available on iOS/iPadOS; all platforms can playback/export
+- `#if os(iOS)` - Camera access, size class detection
+- `#if os(macOS)` - NSOpenPanel, static configs
+- Camera recording only available on iOS/iPadOS; macOS shows video browser only
 
 **Important:** Do NOT use Mac Catalyst. Each platform (iOS, macOS) has its own native target. No "Designed for iPad" compatibility layer.
 
 ### Data Model
 ```swift
-struct VideoDay: Identifiable {
-    let id = UUID()
-    let date: Date          // Normalized to start of day
-    let videoURL: URL?      // nil if no video for this day
+struct VideoTake: Identifiable, Equatable, Hashable {
+    let id: UUID
+    let date: Date
+    let takeNumber: Int
+    let videoURL: URL
     let createdAt: Date
-    var fileName: String    // Format: "video_YYYY-MM-DD.mov"
+    var isSelected: Bool
+}
+
+struct VideoDay: Identifiable, Equatable, Hashable {
+    let id: UUID
+    let date: Date              // Normalized to start of day
+    var takes: [VideoTake]
+    var selectedTake: VideoTake? { takes.first { $0.isSelected } ?? takes.first }
 }
 ```
 
 ### Storage
 - iCloud container: `iCloud.com.paz.dailyframe`
 - Videos path: `Documents/Videos/`
-- File naming: `video_YYYY-MM-DD.mov`
+- File naming: `video_YYYY-MM-DD_NNN.mov` (NNN = take number, zero-padded)
 - Use `FileManager.ubiquitousContainerURL()` for iCloud path
 
 ## Key APIs

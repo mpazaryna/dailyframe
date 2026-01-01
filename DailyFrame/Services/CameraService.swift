@@ -1,27 +1,23 @@
 import Foundation
 import AVFoundation
-import Combine
 
 #if os(iOS)
-@MainActor
-final class CameraService: NSObject, ObservableObject {
-    @Published private(set) var isSessionRunning = false
-    @Published private(set) var isRecording = false
-    @Published private(set) var error: AppError?
+import UIKit
 
-    private let captureSession = AVCaptureSession()
+@Observable
+@MainActor
+final class CameraService: NSObject {
+    private(set) var isSessionRunning = false
+    private(set) var isRecording = false
+    private(set) var error: AppError?
+
+    let captureSession = AVCaptureSession()
     private var videoDeviceInput: AVCaptureDeviceInput?
     private var audioDeviceInput: AVCaptureDeviceInput?
     private let movieFileOutput = AVCaptureMovieFileOutput()
 
     private var recordingContinuation: CheckedContinuation<URL, Error>?
     private let sessionQueue = DispatchQueue(label: "com.paz.dailyframe.camera")
-
-    var previewLayer: AVCaptureVideoPreviewLayer {
-        let layer = AVCaptureVideoPreviewLayer(session: captureSession)
-        layer.videoGravity = .resizeAspectFill
-        return layer
-    }
 
     func setupSession() async throws {
         guard await PermissionManager.shared.hasAllPermissions else {
@@ -108,6 +104,9 @@ final class CameraService: NSObject, ObservableObject {
         let fileName = "recording_\(UUID().uuidString).mov"
         let outputURL = tempDirectory.appendingPathComponent(fileName)
 
+        // Capture current orientation on main thread before going to session queue
+        let rotationAngle = currentVideoRotationAngle()
+
         return try await withCheckedThrowingContinuation { continuation in
             self.recordingContinuation = continuation
 
@@ -118,7 +117,7 @@ final class CameraService: NSObject, ObservableObject {
                 }
 
                 if let connection = self.movieFileOutput.connection(with: .video) {
-                    connection.videoOrientation = .portrait
+                    connection.videoRotationAngle = rotationAngle
                 }
 
                 self.movieFileOutput.startRecording(to: outputURL, recordingDelegate: self)
@@ -133,6 +132,27 @@ final class CameraService: NSObject, ObservableObject {
     func stopRecording() {
         sessionQueue.async { [weak self] in
             self?.movieFileOutput.stopRecording()
+        }
+    }
+
+    /// Returns the video rotation angle based on current device orientation
+    private func currentVideoRotationAngle() -> CGFloat {
+        let deviceOrientation = UIDevice.current.orientation
+
+        switch deviceOrientation {
+        case .portrait:
+            return 90
+        case .portraitUpsideDown:
+            return 270
+        case .landscapeLeft:
+            // Device rotated left = video should be rotated right
+            return 0
+        case .landscapeRight:
+            // Device rotated right = video should be rotated left
+            return 180
+        default:
+            // For .unknown, .faceUp, .faceDown - default to portrait
+            return 90
         }
     }
 }
@@ -159,11 +179,12 @@ extension CameraService: AVCaptureFileOutputRecordingDelegate {
 
 #else
 // macOS stub - camera not supported
+@Observable
 @MainActor
-final class CameraService: ObservableObject {
-    @Published private(set) var isSessionRunning = false
-    @Published private(set) var isRecording = false
-    @Published private(set) var error: AppError? = .cameraUnavailable
+final class CameraService {
+    private(set) var isSessionRunning = false
+    private(set) var isRecording = false
+    private(set) var error: AppError? = .cameraUnavailable
 
     func setupSession() async throws {
         throw AppError.cameraUnavailable

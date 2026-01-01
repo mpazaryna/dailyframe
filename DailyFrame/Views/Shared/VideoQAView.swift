@@ -3,77 +3,114 @@ import AVKit
 
 struct VideoQAView: View {
     let videoURL: URL
+    let takeNumber: Int
+    let totalTakes: Int
     let onKeep: () -> Void
     let onRedo: () -> Void
+    let onDelete: () -> Void
 
-    @State private var player: AVPlayer?
+    #if os(iOS)
+    @Environment(\.horizontalSizeClass) private var sizeClass
+    private var config: VideoQALayoutConfig { VideoQALayoutConfig.current(sizeClass) }
+    #else
+    private var config: VideoQALayoutConfig { VideoQALayoutConfig.current }
+    #endif
+
+    @State private var player: AVPlayer
+
+    init(videoURL: URL, takeNumber: Int, totalTakes: Int, onKeep: @escaping () -> Void, onRedo: @escaping () -> Void, onDelete: @escaping () -> Void) {
+        self.videoURL = videoURL
+        self.takeNumber = takeNumber
+        self.totalTakes = totalTakes
+        self.onKeep = onKeep
+        self.onRedo = onRedo
+        self.onDelete = onDelete
+        self._player = State(initialValue: AVPlayer(url: videoURL))
+    }
 
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                // Dark background
                 Color.black
                     .ignoresSafeArea()
 
-                // Video player
-                if let player = player {
-                    VideoPlayer(player: player)
-                        .ignoresSafeArea()
-                }
+                VideoPlayer(player: player)
+                    .ignoresSafeArea()
 
-                // Controls overlay
                 VStack {
+                    // Top bar with take info
+                    HStack {
+                        Text("Take \(takeNumber)")
+                            .font(.system(size: config.headlineFontSize, weight: .semibold))
+                            .foregroundStyle(.white)
+
+                        if totalTakes > 1 {
+                            Text("of \(totalTakes)")
+                                .font(.system(size: config.bodyFontSize))
+                                .foregroundStyle(.white.opacity(0.7))
+                        }
+
+                        Spacer()
+                    }
+                    .padding()
+                    .background(.ultraThinMaterial.opacity(0.5))
+
                     Spacer()
 
                     // QA decision buttons
-                    HStack(spacing: 40) {
-                        // Redo button
+                    HStack(spacing: config.actionButtonSpacing) {
                         QAButton(
-                            title: "Redo",
-                            systemImage: "arrow.counterclockwise",
-                            style: .secondary
+                            title: "Delete",
+                            systemImage: "trash",
+                            style: .destructive,
+                            config: config
                         ) {
-                            player?.pause()
+                            player.pause()
+                            onDelete()
+                        }
+
+                        QAButton(
+                            title: "Retake",
+                            systemImage: "arrow.counterclockwise",
+                            style: .secondary,
+                            config: config
+                        ) {
+                            player.pause()
                             onRedo()
                         }
 
-                        // Keep button
                         QAButton(
                             title: "Keep",
                             systemImage: "checkmark",
-                            style: .primary
+                            style: .primary,
+                            config: config
                         ) {
-                            player?.pause()
+                            player.pause()
                             onKeep()
                         }
                     }
-                    .padding(.horizontal, 40)
-                    .padding(.bottom, geometry.safeAreaInsets.bottom + 40)
+                    .padding(.horizontal, 20)
+                    .padding(.bottom, geometry.safeAreaInsets.bottom + config.bottomPadding)
                 }
             }
         }
         .onAppear {
-            setupPlayer()
+            player.play()
+            setupLooping()
         }
         .onDisappear {
-            player?.pause()
-            player = nil
+            player.pause()
         }
     }
 
-    private func setupPlayer() {
-        let avPlayer = AVPlayer(url: videoURL)
-        avPlayer.play()
-        player = avPlayer
-
-        // Loop video
+    private func setupLooping() {
         NotificationCenter.default.addObserver(
             forName: .AVPlayerItemDidPlayToEndTime,
-            object: avPlayer.currentItem,
+            object: player.currentItem,
             queue: .main
         ) { _ in
-            avPlayer.seek(to: .zero)
-            avPlayer.play()
+            player.seek(to: .zero)
+            player.play()
         }
     }
 }
@@ -82,29 +119,50 @@ struct QAButton: View {
     enum Style {
         case primary
         case secondary
+        case destructive
     }
 
     let title: String
     let systemImage: String
     let style: Style
+    let config: VideoQALayoutConfig
     let action: () -> Void
 
     var body: some View {
         Button(action: action) {
             VStack(spacing: 8) {
                 Image(systemName: systemImage)
-                    .font(.system(size: 28, weight: .medium))
+                    .font(.system(size: config.actionButtonIconSize, weight: .medium))
 
                 Text(title)
-                    .font(.subheadline)
-                    .fontWeight(.medium)
+                    .font(.system(size: config.captionFontSize, weight: .medium))
             }
-            .frame(width: 100, height: 80)
-            .foregroundStyle(style == .primary ? .white : .primary)
-            .background(style == .primary ? Color.green : Color.clear)
+            .frame(width: config.actionButtonWidth, height: config.actionButtonHeight)
+            .foregroundStyle(foregroundColor)
+            .background(backgroundColor)
             .background(.ultraThinMaterial)
-            .clipShape(RoundedRectangle(cornerRadius: 16))
+            .clipShape(RoundedRectangle(cornerRadius: config.actionButtonCornerRadius))
             .glassEffect()
+        }
+    }
+
+    private var foregroundColor: Color {
+        switch style {
+        case .primary, .destructive:
+            return .white
+        case .secondary:
+            return .primary
+        }
+    }
+
+    private var backgroundColor: Color {
+        switch style {
+        case .primary:
+            return .green
+        case .secondary:
+            return .clear
+        case .destructive:
+            return .red.opacity(0.8)
         }
     }
 }
@@ -112,7 +170,10 @@ struct QAButton: View {
 #Preview {
     VideoQAView(
         videoURL: URL(fileURLWithPath: "/sample.mov"),
+        takeNumber: 1,
+        totalTakes: 3,
         onKeep: {},
-        onRedo: {}
+        onRedo: {},
+        onDelete: {}
     )
 }

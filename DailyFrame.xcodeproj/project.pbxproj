@@ -12,34 +12,29 @@
 		17F8F4DC5F083A9D464BB636 /* iCloudSyncService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD9CF16388FD0880A7CAED8 /* iCloudSyncService.swift */; };
 		184C2F41236C33525514FB48 /* SyncStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C6CAB2392CEFDBB6773226 /* SyncStatusView.swift */; };
 		18D2F839180B1042EC0349EF /* AppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 244A34E27376C3B7B148E56F /* AppError.swift */; };
-		1EA9965ACF19531FBC991957 /* VideoRecorderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B717E396C097DDAEC434A617 /* VideoRecorderView.swift */; };
-		2782D3B9AB2A305109F8C52A /* ExportViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01D05BB401AD5AFF0008F22F /* ExportViewModel.swift */; };
+		2AC31C3556D01DE1C3BB2D9C /* RecordingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15836CF865FA1E417DE7EE7F /* RecordingView.swift */; };
 		32E36500E0F38C9B1BD827C8 /* VideoExportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4755550B3EDB959EE25857FE /* VideoExportView.swift */; };
-		38B8D667344756DA1BDDAA0A /* MacRecordingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85BB19216158C20B86DA8498 /* MacRecordingView.swift */; };
 		3BB4F18B2CAC9F61156E79A5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF0A7823D25B10D7C86E897 /* AppDelegate.swift */; };
+		3F112CECBF74046F859EE9EA /* RecordingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15836CF865FA1E417DE7EE7F /* RecordingView.swift */; };
 		52D0E707B34DF83DEB1DED9C /* SyncState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0224EB66DE0E844822D253E /* SyncState.swift */; };
+		5990F5423FE62220F9090C54 /* PlatformConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = D789923971D2707F0ADB2EFD /* PlatformConfig.swift */; };
 		5C642AE4EFDF5AA52B38C77B /* VideoDay.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC43800ABA2A2B771763EACC /* VideoDay.swift */; };
-		5D01368E85276371CF61CAF6 /* VideoListItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44799948061CE2D6881EAAD /* VideoListItemView.swift */; };
-		61B3FAE60DB389E01FA64A94 /* IPhoneRecordingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B07B08773DD79306DECE1B30 /* IPhoneRecordingView.swift */; };
 		63AC0260CDB142EEE5B62511 /* PlatformDetection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A5EA184D06BFD1444E8604 /* PlatformDetection.swift */; };
-		6A7E3972EF67B180409D8B32 /* MacRecordingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85BB19216158C20B86DA8498 /* MacRecordingView.swift */; };
-		73A5A0EB76356C726FD93A6B /* IPhoneRecordingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B07B08773DD79306DECE1B30 /* IPhoneRecordingView.swift */; };
+		68C67B6A3882F0AED930B763 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A388B326343259B25357B184 /* HomeView.swift */; };
 		74374B51CF0E15848AD503BD /* iCloudSyncService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD9CF16388FD0880A7CAED8 /* iCloudSyncService.swift */; };
-		760682DA31D6E3467BBC55C7 /* IPadRecordingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F07688638A49B2205D259BDA /* IPadRecordingView.swift */; };
 		7B37245408AD976DF9164025 /* VideoExportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4755550B3EDB959EE25857FE /* VideoExportView.swift */; };
 		814E515E732E377929FF504B /* VideoExportService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0658AE0DA80B736ABFE69C1D /* VideoExportService.swift */; };
 		88101BF9A78FA8CEA95E529A /* DateUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631F24F01238AB784E20126F /* DateUtilities.swift */; };
 		892E7E41F5E55946EB3CC000 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF0A7823D25B10D7C86E897 /* AppDelegate.swift */; };
+		907719619E3761F05A0931C3 /* PlatformConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = D789923971D2707F0ADB2EFD /* PlatformConfig.swift */; };
 		922DA74B369788DB381ED94A /* DailyFrameApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE15294517D93E808FD1201 /* DailyFrameApp.swift */; };
 		9385B6C14124C212EA838D1F /* SyncStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C6CAB2392CEFDBB6773226 /* SyncStatusView.swift */; };
-		978982490BEC626D4637A55B /* VideoRecorderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B717E396C097DDAEC434A617 /* VideoRecorderView.swift */; };
+		96467F10002E619D1D2234D9 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A388B326343259B25357B184 /* HomeView.swift */; };
 		9BB334989DB9ACE78012B17E /* DailyFrameApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE15294517D93E808FD1201 /* DailyFrameApp.swift */; };
 		9C3A347D69D59123D71F7C02 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 16B50D517129CFCF49F827AA /* Assets.xcassets */; };
-		9F73825DD4C8CD9336570554 /* VideoListItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44799948061CE2D6881EAAD /* VideoListItemView.swift */; };
-		A5696D31FE01DF8D74A95FC6 /* VideoManagerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3341E6428E56247EB5F2537 /* VideoManagerViewModel.swift */; };
-		B8B892AB73768CB002DFCFC9 /* ExportViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01D05BB401AD5AFF0008F22F /* ExportViewModel.swift */; };
+		A172F133614987F44DB98F63 /* VideoLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = D193077355D94C96F9F5278E /* VideoLibrary.swift */; };
 		BAD9DA3C051CB938E5C3E01B /* CameraService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E46D5AC9B264B87FDC9762 /* CameraService.swift */; };
-		BEFD99A2FA99E224E1F613CB /* IPadRecordingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F07688638A49B2205D259BDA /* IPadRecordingView.swift */; };
+		BBAC92C45D1BD3148350F793 /* VideoLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = D193077355D94C96F9F5278E /* VideoLibrary.swift */; };
 		BFD1F4245A4FABD539E14330 /* VideoQAView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B6E6D715EB14E23FA19721 /* VideoQAView.swift */; };
 		C3715C8ECD60AF611ACCFDDA /* VideoExportService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0658AE0DA80B736ABFE69C1D /* VideoExportService.swift */; };
 		C526AB98253831F24507A867 /* SyncState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0224EB66DE0E844822D253E /* SyncState.swift */; };
@@ -50,7 +45,6 @@
 		D8652C96937C165E1C6BBC9A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 16B50D517129CFCF49F827AA /* Assets.xcassets */; };
 		DA45CCC65DE576E49C55734E /* VideoQAView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B6E6D715EB14E23FA19721 /* VideoQAView.swift */; };
 		DBF78A07F00B923AD85EA771 /* PermissionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3362A3275C9E541C6C6B07 /* PermissionManager.swift */; };
-		E222F5EEA4E32A823CA05EE6 /* VideoManagerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3341E6428E56247EB5F2537 /* VideoManagerViewModel.swift */; };
 		EE31086B19C79298F18E0CAD /* AppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 244A34E27376C3B7B148E56F /* AppError.swift */; };
 		F227C04E670C093563661D66 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5155E8CD32C76FD59860982D /* ContentView.swift */; };
 		F6A86D003858FB6C9BC2E6F8 /* VideoStorageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DACA237477A4B8E1929B6DA0 /* VideoStorageService.swift */; };
@@ -58,9 +52,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		01D05BB401AD5AFF0008F22F /* ExportViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportViewModel.swift; sourceTree = "<group>"; };
 		02C6CAB2392CEFDBB6773226 /* SyncStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncStatusView.swift; sourceTree = "<group>"; };
 		0658AE0DA80B736ABFE69C1D /* VideoExportService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoExportService.swift; sourceTree = "<group>"; };
+		15836CF865FA1E417DE7EE7F /* RecordingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingView.swift; sourceTree = "<group>"; };
 		16B50D517129CFCF49F827AA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		18057BC020CE2F7F3AD2D1A5 /* DailyFrame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DailyFrame.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1AD9CF16388FD0880A7CAED8 /* iCloudSyncService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iCloudSyncService.swift; sourceTree = "<group>"; };
@@ -73,19 +67,16 @@
 		6BE15294517D93E808FD1201 /* DailyFrameApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyFrameApp.swift; sourceTree = "<group>"; };
 		7C9C139D8BA31A53AF18F282 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		7CF0A7823D25B10D7C86E897 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		85BB19216158C20B86DA8498 /* MacRecordingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacRecordingView.swift; sourceTree = "<group>"; };
 		8F236AC5E2AA586D26212D9D /* DailyFrame.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = DailyFrame.entitlements; sourceTree = "<group>"; };
 		93A5EA184D06BFD1444E8604 /* PlatformDetection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlatformDetection.swift; sourceTree = "<group>"; };
 		A0224EB66DE0E844822D253E /* SyncState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncState.swift; sourceTree = "<group>"; };
-		A3341E6428E56247EB5F2537 /* VideoManagerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoManagerViewModel.swift; sourceTree = "<group>"; };
-		B07B08773DD79306DECE1B30 /* IPhoneRecordingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPhoneRecordingView.swift; sourceTree = "<group>"; };
-		B717E396C097DDAEC434A617 /* VideoRecorderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoRecorderView.swift; sourceTree = "<group>"; };
-		C521A5959F11E0FBF3BB2D7D /* DailyFrame-iOS.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; name = "DailyFrame-iOS.app"; path = DailyFrame.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A388B326343259B25357B184 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		C521A5959F11E0FBF3BB2D7D /* DailyFrame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DailyFrame.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CC43800ABA2A2B771763EACC /* VideoDay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoDay.swift; sourceTree = "<group>"; };
 		D0B6E6D715EB14E23FA19721 /* VideoQAView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoQAView.swift; sourceTree = "<group>"; };
-		D44799948061CE2D6881EAAD /* VideoListItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoListItemView.swift; sourceTree = "<group>"; };
+		D193077355D94C96F9F5278E /* VideoLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoLibrary.swift; sourceTree = "<group>"; };
+		D789923971D2707F0ADB2EFD /* PlatformConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlatformConfig.swift; sourceTree = "<group>"; };
 		DACA237477A4B8E1929B6DA0 /* VideoStorageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoStorageService.swift; sourceTree = "<group>"; };
-		F07688638A49B2205D259BDA /* IPadRecordingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPadRecordingView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -96,6 +87,14 @@
 				6BE15294517D93E808FD1201 /* DailyFrameApp.swift */,
 			);
 			path = App;
+			sourceTree = "<group>";
+		};
+		362F4F868D1ADE1F067D9DE1 /* Configuration */ = {
+			isa = PBXGroup;
+			children = (
+				D789923971D2707F0ADB2EFD /* PlatformConfig.swift */,
+			);
+			path = Configuration;
 			sourceTree = "<group>";
 		};
 		5D06BF819822E028D2845B99 /* Utilities */ = {
@@ -111,11 +110,10 @@
 		6519B6923FA23768025D70B0 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				EE744F3170F14B7E2C301E0B /* iPad */,
-				D3F8537093DB3EEC338C9352 /* iPhone */,
-				96BE3F6338C425044BD58874 /* Mac */,
 				7B3EB7B9C5C823CDF985C64D /* Shared */,
 				5155E8CD32C76FD59860982D /* ContentView.swift */,
+				A388B326343259B25357B184 /* HomeView.swift */,
+				15836CF865FA1E417DE7EE7F /* RecordingView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -125,9 +123,7 @@
 			children = (
 				02C6CAB2392CEFDBB6773226 /* SyncStatusView.swift */,
 				4755550B3EDB959EE25857FE /* VideoExportView.swift */,
-				D44799948061CE2D6881EAAD /* VideoListItemView.swift */,
 				D0B6E6D715EB14E23FA19721 /* VideoQAView.swift */,
-				B717E396C097DDAEC434A617 /* VideoRecorderView.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -135,7 +131,7 @@
 		7F4D691EBB4B4583FFF1A7B0 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				C521A5959F11E0FBF3BB2D7D /* DailyFrame-iOS.app */,
+				C521A5959F11E0FBF3BB2D7D /* DailyFrame.app */,
 				18057BC020CE2F7F3AD2D1A5 /* DailyFrame.app */,
 			);
 			name = Products;
@@ -151,20 +147,13 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
-		96BE3F6338C425044BD58874 /* Mac */ = {
-			isa = PBXGroup;
-			children = (
-				85BB19216158C20B86DA8498 /* MacRecordingView.swift */,
-			);
-			path = Mac;
-			sourceTree = "<group>";
-		};
 		B9A0544841995138499160AE /* Services */ = {
 			isa = PBXGroup;
 			children = (
 				31E46D5AC9B264B87FDC9762 /* CameraService.swift */,
 				1AD9CF16388FD0880A7CAED8 /* iCloudSyncService.swift */,
 				0658AE0DA80B736ABFE69C1D /* VideoExportService.swift */,
+				D193077355D94C96F9F5278E /* VideoLibrary.swift */,
 				DACA237477A4B8E1929B6DA0 /* VideoStorageService.swift */,
 			);
 			path = Services;
@@ -182,41 +171,16 @@
 			isa = PBXGroup;
 			children = (
 				1AE360AB5655F7A0AA674A43 /* App */,
+				362F4F868D1ADE1F067D9DE1 /* Configuration */,
 				80D30FECA33473C4FD736795 /* Models */,
 				FD6017BAE7DF8E7A0D84C9BB /* Resources */,
 				B9A0544841995138499160AE /* Services */,
 				5D06BF819822E028D2845B99 /* Utilities */,
-				E8B53AF7CAC6984353E83082 /* ViewModels */,
 				6519B6923FA23768025D70B0 /* Views */,
 				8F236AC5E2AA586D26212D9D /* DailyFrame.entitlements */,
 				7C9C139D8BA31A53AF18F282 /* Info.plist */,
 			);
 			path = DailyFrame;
-			sourceTree = "<group>";
-		};
-		D3F8537093DB3EEC338C9352 /* iPhone */ = {
-			isa = PBXGroup;
-			children = (
-				B07B08773DD79306DECE1B30 /* IPhoneRecordingView.swift */,
-			);
-			path = iPhone;
-			sourceTree = "<group>";
-		};
-		E8B53AF7CAC6984353E83082 /* ViewModels */ = {
-			isa = PBXGroup;
-			children = (
-				01D05BB401AD5AFF0008F22F /* ExportViewModel.swift */,
-				A3341E6428E56247EB5F2537 /* VideoManagerViewModel.swift */,
-			);
-			path = ViewModels;
-			sourceTree = "<group>";
-		};
-		EE744F3170F14B7E2C301E0B /* iPad */ = {
-			isa = PBXGroup;
-			children = (
-				F07688638A49B2205D259BDA /* IPadRecordingView.swift */,
-			);
-			path = iPad;
 			sourceTree = "<group>";
 		};
 		FD6017BAE7DF8E7A0D84C9BB /* Resources */ = {
@@ -263,7 +227,7 @@
 			packageProductDependencies = (
 			);
 			productName = "DailyFrame-iOS";
-			productReference = C521A5959F11E0FBF3BB2D7D /* DailyFrame-iOS.app */;
+			productReference = C521A5959F11E0FBF3BB2D7D /* DailyFrame.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -273,13 +237,13 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
-				LastUpgradeCheck = 1610;
+				LastUpgradeCheck = 2620;
 				TargetAttributes = {
 					4D87BED0BACB9C604D0A4E9B = {
 						ProvisioningStyle = Automatic;
 					};
 					5146855AE6BB273C1BF06FA5 = {
-						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
 					};
 				};
 			};
@@ -332,21 +296,18 @@
 				CF56C7543B15F2F99D0404B0 /* ContentView.swift in Sources */,
 				9BB334989DB9ACE78012B17E /* DailyFrameApp.swift in Sources */,
 				D662A73070B7D904EDAD763A /* DateUtilities.swift in Sources */,
-				2782D3B9AB2A305109F8C52A /* ExportViewModel.swift in Sources */,
-				BEFD99A2FA99E224E1F613CB /* IPadRecordingView.swift in Sources */,
-				61B3FAE60DB389E01FA64A94 /* IPhoneRecordingView.swift in Sources */,
-				38B8D667344756DA1BDDAA0A /* MacRecordingView.swift in Sources */,
+				68C67B6A3882F0AED930B763 /* HomeView.swift in Sources */,
 				0BF43A4676F445F825F0E76A /* PermissionManager.swift in Sources */,
+				907719619E3761F05A0931C3 /* PlatformConfig.swift in Sources */,
 				D15A20C53A8A1774538FD4C8 /* PlatformDetection.swift in Sources */,
+				2AC31C3556D01DE1C3BB2D9C /* RecordingView.swift in Sources */,
 				C526AB98253831F24507A867 /* SyncState.swift in Sources */,
 				184C2F41236C33525514FB48 /* SyncStatusView.swift in Sources */,
 				F953CFDCCD8FA287D77949F1 /* VideoDay.swift in Sources */,
 				814E515E732E377929FF504B /* VideoExportService.swift in Sources */,
 				32E36500E0F38C9B1BD827C8 /* VideoExportView.swift in Sources */,
-				5D01368E85276371CF61CAF6 /* VideoListItemView.swift in Sources */,
-				A5696D31FE01DF8D74A95FC6 /* VideoManagerViewModel.swift in Sources */,
+				BBAC92C45D1BD3148350F793 /* VideoLibrary.swift in Sources */,
 				BFD1F4245A4FABD539E14330 /* VideoQAView.swift in Sources */,
-				978982490BEC626D4637A55B /* VideoRecorderView.swift in Sources */,
 				F6A86D003858FB6C9BC2E6F8 /* VideoStorageService.swift in Sources */,
 				74374B51CF0E15848AD503BD /* iCloudSyncService.swift in Sources */,
 			);
@@ -362,21 +323,18 @@
 				F227C04E670C093563661D66 /* ContentView.swift in Sources */,
 				922DA74B369788DB381ED94A /* DailyFrameApp.swift in Sources */,
 				88101BF9A78FA8CEA95E529A /* DateUtilities.swift in Sources */,
-				B8B892AB73768CB002DFCFC9 /* ExportViewModel.swift in Sources */,
-				760682DA31D6E3467BBC55C7 /* IPadRecordingView.swift in Sources */,
-				73A5A0EB76356C726FD93A6B /* IPhoneRecordingView.swift in Sources */,
-				6A7E3972EF67B180409D8B32 /* MacRecordingView.swift in Sources */,
+				96467F10002E619D1D2234D9 /* HomeView.swift in Sources */,
 				DBF78A07F00B923AD85EA771 /* PermissionManager.swift in Sources */,
+				5990F5423FE62220F9090C54 /* PlatformConfig.swift in Sources */,
 				63AC0260CDB142EEE5B62511 /* PlatformDetection.swift in Sources */,
+				3F112CECBF74046F859EE9EA /* RecordingView.swift in Sources */,
 				52D0E707B34DF83DEB1DED9C /* SyncState.swift in Sources */,
 				9385B6C14124C212EA838D1F /* SyncStatusView.swift in Sources */,
 				5C642AE4EFDF5AA52B38C77B /* VideoDay.swift in Sources */,
 				C3715C8ECD60AF611ACCFDDA /* VideoExportService.swift in Sources */,
 				7B37245408AD976DF9164025 /* VideoExportView.swift in Sources */,
-				9F73825DD4C8CD9336570554 /* VideoListItemView.swift in Sources */,
-				E222F5EEA4E32A823CA05EE6 /* VideoManagerViewModel.swift in Sources */,
+				A172F133614987F44DB98F63 /* VideoLibrary.swift in Sources */,
 				DA45CCC65DE576E49C55734E /* VideoQAView.swift in Sources */,
-				1EA9965ACF19531FBC991957 /* VideoRecorderView.swift in Sources */,
 				1604E70EB5D2B6C366748106 /* VideoStorageService.swift in Sources */,
 				17F8F4DC5F083A9D464BB636 /* iCloudSyncService.swift in Sources */,
 			);
@@ -393,7 +351,8 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = KDZZFKGF55;
+				DEAD_CODE_STRIPPING = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = DailyFrame/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -415,8 +374,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = DailyFrame/DailyFrame.entitlements;
-				CODE_SIGN_IDENTITY = "-";
-				DEVELOPMENT_TEAM = "";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = DailyFrame/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -435,6 +394,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -465,7 +425,9 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = KDZZFKGF55;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
@@ -490,6 +452,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 6.0;
@@ -504,7 +467,8 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = KDZZFKGF55;
+				DEAD_CODE_STRIPPING = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = DailyFrame/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -526,8 +490,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = DailyFrame/DailyFrame.entitlements;
-				CODE_SIGN_IDENTITY = "-";
-				DEVELOPMENT_TEAM = "";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = DailyFrame/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -546,6 +510,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -576,7 +541,9 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = KDZZFKGF55;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
@@ -594,6 +561,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 6.0;
