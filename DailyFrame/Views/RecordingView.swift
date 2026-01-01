@@ -179,9 +179,8 @@ struct CameraPreviewView: UIViewRepresentable {
     }
 }
 
+@MainActor
 class CameraPreviewUIView: UIView {
-    private var orientationObserver: NSObjectProtocol?
-
     override class var layerClass: AnyClass {
         AVCaptureVideoPreviewLayer.self
     }
@@ -196,13 +195,12 @@ class CameraPreviewUIView: UIView {
         backgroundColor = .black
 
         // Observe orientation changes
-        orientationObserver = NotificationCenter.default.addObserver(
-            forName: UIDevice.orientationDidChangeNotification,
-            object: nil,
-            queue: .main
-        ) { [weak self] _ in
-            self?.updatePreviewOrientation()
-        }
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(orientationDidChange),
+            name: UIDevice.orientationDidChangeNotification,
+            object: nil
+        )
 
         updatePreviewOrientation()
     }
@@ -211,10 +209,8 @@ class CameraPreviewUIView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    deinit {
-        if let observer = orientationObserver {
-            NotificationCenter.default.removeObserver(observer)
-        }
+    @objc private func orientationDidChange() {
+        updatePreviewOrientation()
     }
 
     override func layoutSubviews() {
