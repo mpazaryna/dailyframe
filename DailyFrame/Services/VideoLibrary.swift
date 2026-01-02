@@ -30,6 +30,48 @@ final class VideoLibrary {
         !todaysTakes.isEmpty
     }
 
+    /// Set of all dates that have recorded videos (normalized to start of day)
+    var recordedDates: Set<Date> {
+        Set(allVideos.map { Calendar.current.startOfDay(for: $0.date) })
+    }
+
+    /// Current streak of consecutive days with recordings
+    var currentStreak: Int {
+        guard !allVideos.isEmpty else { return 0 }
+
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        let recorded = recordedDates
+
+        // Start from today or yesterday (allow for not having recorded today yet)
+        var checkDate = today
+        if !recorded.contains(today) {
+            // Check if yesterday has a recording to continue streak
+            guard let yesterday = calendar.date(byAdding: .day, value: -1, to: today),
+                  recorded.contains(yesterday) else {
+                return 0
+            }
+            checkDate = yesterday
+        }
+
+        // Count consecutive days backward
+        var streak = 0
+        while recorded.contains(checkDate) {
+            streak += 1
+            guard let previousDay = calendar.date(byAdding: .day, value: -1, to: checkDate) else {
+                break
+            }
+            checkDate = previousDay
+        }
+
+        return streak
+    }
+
+    /// Earliest recorded date (for calendar range)
+    var earliestDate: Date? {
+        allVideos.last?.date
+    }
+
     // MARK: - Initialization
 
     private func setupSyncObserver() {

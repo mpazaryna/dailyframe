@@ -12,6 +12,7 @@ enum AppError: LocalizedError {
     case storageQuotaExceeded
     case fileNotFound(String)
     case exportFailed(String)
+    case compositionFailed(String)
     case alreadyRecordedToday
     case unknown(String)
 
@@ -44,6 +45,8 @@ enum AppError: LocalizedError {
             return "File not found: \(path)"
         case .exportFailed(let reason):
             return "Export failed: \(reason)"
+        case .compositionFailed(let reason):
+            return "Failed to create montage: \(reason)"
         case .alreadyRecordedToday:
             return "You've already recorded a video today"
         case .unknown(let message):

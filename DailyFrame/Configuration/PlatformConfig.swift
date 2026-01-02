@@ -425,3 +425,55 @@ struct VideoBrowserLayoutConfig {
     }
     #endif
 }
+
+// MARK: - Calendar Layout Config
+
+struct CalendarLayoutConfig {
+    let cellSize: CGFloat
+    let cellSpacing: CGFloat
+    let monthHeaderFontSize: CGFloat
+    let weekdayFontSize: CGFloat
+    let dayFontSize: CGFloat
+    let checkmarkSize: CGFloat
+    let streakFontSize: CGFloat
+    let horizontalPadding: CGFloat
+
+    #if os(iOS)
+    static func current(_ sizeClass: UserInterfaceSizeClass?) -> Self {
+        sizeClass == .regular
+            ? Self(  // iPad
+                cellSize: 44,
+                cellSpacing: 8,
+                monthHeaderFontSize: 20,
+                weekdayFontSize: 12,
+                dayFontSize: 15,
+                checkmarkSize: 20,
+                streakFontSize: 14,
+                horizontalPadding: 24
+            )
+            : Self(  // iPhone
+                cellSize: 40,
+                cellSpacing: 6,
+                monthHeaderFontSize: 18,
+                weekdayFontSize: 11,
+                dayFontSize: 14,
+                checkmarkSize: 18,
+                streakFontSize: 13,
+                horizontalPadding: 16
+            )
+    }
+    #else
+    static var current: Self {  // macOS
+        Self(
+            cellSize: 36,
+            cellSpacing: 6,
+            monthHeaderFontSize: 16,
+            weekdayFontSize: 11,
+            dayFontSize: 13,
+            checkmarkSize: 16,
+            streakFontSize: 12,
+            horizontalPadding: 20
+        )
+    }
+    #endif
+}

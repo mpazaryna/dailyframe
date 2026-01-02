@@ -90,7 +90,11 @@ actor VideoStorageService {
         do {
             let contents = try FileManager.default.contentsOfDirectory(
                 at: directory,
-                includingPropertiesForKeys: [.creationDateKey],
+                includingPropertiesForKeys: [
+                    .creationDateKey,
+                    .ubiquitousItemDownloadingStatusKey,
+                    .ubiquitousItemIsDownloadingKey
+                ],
                 options: .skipsHiddenFiles
             )
 
@@ -102,6 +106,9 @@ actor VideoStorageService {
                       let parsed = DateUtilities.parseFileName(url.lastPathComponent) else {
                     continue
                 }
+
+                // Trigger download for files not yet downloaded
+                await triggerDownloadIfNeeded(for: url)
 
                 let normalizedDate = Calendar.current.startOfDay(for: parsed.date)
                 let createdAt = (try? url.resourceValues(forKeys: [.creationDateKey]).creationDate) ?? parsed.date
@@ -125,6 +132,22 @@ actor VideoStorageService {
             return daysByDate.values.sorted { $0.date > $1.date }
         } catch {
             return []
+        }
+    }
+
+    /// Triggers download for iCloud files that aren't downloaded yet
+    private func triggerDownloadIfNeeded(for url: URL) async {
+        do {
+            let resourceValues = try url.resourceValues(forKeys: [.ubiquitousItemDownloadingStatusKey])
+
+            if let downloadStatus = resourceValues.ubiquitousItemDownloadingStatus {
+                // If not current (fully downloaded), trigger download
+                if downloadStatus != .current {
+                    try FileManager.default.startDownloadingUbiquitousItem(at: url)
+                }
+            }
+        } catch {
+            // Silently fail - file might not be ubiquitous or already downloading
         }
     }
 

@@ -20,13 +20,19 @@ struct HomeView: View {
         case home
         case recording
         case reviewing(VideoTake)
+        case montage(URL, Int) // URL to montage, video count
     }
 
     @State private var viewState: ViewState = .home
     @State private var showTakeSelector = false
     @State private var showExportSheet = false
+    @State private var showCalendar = false
     @State private var selectedTake: VideoTake?
     @State private var selectedVideo: VideoDay?
+    @State private var selectedDayForTakes: VideoDay?
+    @State private var isGeneratingMontage = false
+    @State private var showMontage = false
+    @State private var montageURL: URL?
 
     var body: some View {
         Group {
@@ -78,6 +84,14 @@ struct HomeView: View {
                     }
                 }
             )
+        case .montage(let url, let count):
+            MontageView(
+                videoURL: url,
+                videoCount: count,
+                onDismiss: {
+                    viewState = .home
+                }
+            )
         }
     }
 
@@ -89,6 +103,11 @@ struct HomeView: View {
 
                     if let library = library, !library.allVideos.isEmpty {
                         recentVideosSection
+
+                        // Montage card (show when 2+ videos)
+                        if library.allVideos.count >= 2 {
+                            montageCard
+                        }
                     }
 
                     Spacer(minLength: 120)
@@ -96,10 +115,20 @@ struct HomeView: View {
                 .padding(config.cardPadding)
                 .frame(maxWidth: config.maxContentWidth > 0 ? config.maxContentWidth : .infinity)
             }
+            .refreshable {
+                await library?.refresh()
+            }
             .frame(maxWidth: .infinity)
             .background(Color(.systemGroupedBackground))
             .navigationTitle("DailyFrame")
             .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button {
+                        showCalendar = true
+                    } label: {
+                        Image(systemName: "calendar")
+                    }
+                }
                 ToolbarItem(placement: .topBarTrailing) {
                     SyncStatusView(syncState: library?.syncState ?? .idle)
                 }
@@ -114,6 +143,9 @@ struct HomeView: View {
         .sheet(isPresented: $showTakeSelector) {
             takeSelectorSheet
         }
+        .sheet(item: $selectedDayForTakes) { day in
+            dayTakeSelectorSheet(for: day)
+        }
         .sheet(isPresented: $showExportSheet) {
             if let take = selectedTake {
                 VideoExportView(videoURL: take.videoURL) {
@@ -122,6 +154,20 @@ struct HomeView: View {
                 }
                 .presentationDetents([.medium])
             }
+        }
+        .sheet(isPresented: $showCalendar) {
+            CalendarView(
+                onSelectDay: { videoDay in
+                    showCalendar = false
+                    if let take = videoDay.selectedTake {
+                        selectedTake = take
+                        viewState = .reviewing(take)
+                    }
+                },
+                onDismiss: {
+                    showCalendar = false
+                }
+            )
         }
     }
     #endif
@@ -153,7 +199,29 @@ struct HomeView: View {
         }
         .toolbar {
             ToolbarItemGroup(placement: .primaryAction) {
+                // Calendar button
+                Button {
+                    showCalendar = true
+                } label: {
+                    Label("Calendar", systemImage: "calendar")
+                }
+
                 SyncStatusView(syncState: library?.syncState ?? .idle)
+
+                // Montage button
+                if let library = library, library.allVideos.count >= 2 {
+                    Button {
+                        Task { await generateMontageMacOS() }
+                    } label: {
+                        if isGeneratingMontage {
+                            ProgressView()
+                                .scaleEffect(0.7)
+                        } else {
+                            Label("Montage", systemImage: "film.stack")
+                        }
+                    }
+                    .disabled(isGeneratingMontage)
+                }
 
                 if selectedTake != nil {
                     Button {
@@ -164,8 +232,49 @@ struct HomeView: View {
                 }
             }
         }
+        .sheet(isPresented: $showMontage) {
+            if let montageURL = montageURL {
+                MontageView(
+                    videoURL: montageURL,
+                    videoCount: library?.allVideos.count ?? 0,
+                    onDismiss: {
+                        showMontage = false
+                    }
+                )
+                .frame(minWidth: 600, minHeight: 450)
+            }
+        }
+        .sheet(isPresented: $showCalendar) {
+            CalendarView(
+                onSelectDay: { videoDay in
+                    showCalendar = false
+                    if let take = videoDay.selectedTake {
+                        selectedTake = take
+                    }
+                },
+                onDismiss: {
+                    showCalendar = false
+                }
+            )
+            .frame(minWidth: 400, minHeight: 500)
+        }
         .task {
             await library?.loadVideos()
+        }
+    }
+
+    private func generateMontageMacOS() async {
+        guard let library = library, !library.allVideos.isEmpty else { return }
+
+        isGeneratingMontage = true
+        defer { isGeneratingMontage = false }
+
+        do {
+            let url = try await VideoCompositionService.shared.createMontage(from: library.allVideos)
+            montageURL = url
+            showMontage = true
+        } catch {
+            print("Montage generation failed: \(error)")
         }
     }
 
@@ -286,46 +395,44 @@ struct HomeView: View {
 
     #if os(iOS)
     private var todayStatusCard: some View {
-        VStack(spacing: config.cardSpacing) {
+        HStack(spacing: 14) {
+            // Status icon
+            ZStack {
+                Circle()
+                    .fill(library?.hasTodaysTakes == true ? .green.opacity(0.15) : .secondary.opacity(0.1))
+                    .frame(width: 44, height: 44)
+                Image(systemName: library?.hasTodaysTakes == true ? "checkmark.circle.fill" : "circle.dashed")
+                    .font(.system(size: 22, weight: .medium))
+                    .foregroundStyle(library?.hasTodaysTakes == true ? Color.green : Color.secondary.opacity(0.5))
+            }
+
+            // Status text
+            VStack(alignment: .leading, spacing: 2) {
+                Text("Today")
+                    .font(.system(size: config.captionFontSize, weight: .medium))
+                    .foregroundStyle(.secondary)
+                if library?.hasTodaysTakes == true {
+                    let count = library?.todaysTakes.count ?? 0
+                    Text("\(count) take\(count == 1 ? "" : "s") recorded")
+                        .font(.system(size: config.headlineFontSize, weight: .semibold))
+                } else {
+                    Text("Ready to record")
+                        .font(.system(size: config.headlineFontSize, weight: .semibold))
+                        .foregroundStyle(.primary.opacity(0.8))
+                }
+            }
+
+            Spacer()
+
+            // Action button (only when has takes)
             if library?.hasTodaysTakes == true {
-                HStack {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("Today")
-                            .font(.system(size: config.headlineFontSize, weight: .medium))
-                            .foregroundStyle(.secondary)
-                        Text("\(library?.todaysTakes.count ?? 0) take\(library?.todaysTakes.count == 1 ? "" : "s")")
-                            .font(.system(size: config.headlineFontSize + 4, weight: .semibold))
-                    }
-                    Spacer()
-                    Button {
-                        showTakeSelector = true
-                    } label: {
-                        HStack(spacing: 6) {
-                            Image(systemName: "film.stack")
-                            Text("View")
-                        }
-                        .font(.subheadline.weight(.medium))
-                        .padding(.horizontal, 16)
-                        .padding(.vertical, 10)
-                        .background(.blue)
-                        .foregroundStyle(.white)
-                        .clipShape(Capsule())
-                    }
+                Button {
+                    showTakeSelector = true
+                } label: {
+                    Image(systemName: "play.circle.fill")
+                        .font(.system(size: 32))
+                        .foregroundStyle(.blue)
                 }
-            } else {
-                VStack(spacing: 12) {
-                    Image(systemName: "video.badge.plus")
-                        .font(.system(size: config.heroIconSize))
-                        .foregroundStyle(.tertiary)
-                    Text("No video yet today")
-                        .font(.system(size: config.headlineFontSize, weight: .medium))
-                        .foregroundStyle(.secondary)
-                    Text("Tap the record button to capture your daily moment")
-                        .font(.system(size: config.captionFontSize))
-                        .foregroundStyle(.tertiary)
-                        .multilineTextAlignment(.center)
-                }
-                .padding(.vertical, 20)
             }
         }
         .padding(config.cardPadding)
@@ -350,9 +457,69 @@ struct HomeView: View {
         }
     }
 
+    private var montageCard: some View {
+        Button {
+            Task { await generateMontage() }
+        } label: {
+            HStack(spacing: 14) {
+                ZStack {
+                    Circle()
+                        .fill(.blue.opacity(0.15))
+                        .frame(width: 44, height: 44)
+                    Image(systemName: isGeneratingMontage ? "hourglass" : "film.stack.fill")
+                        .font(.system(size: 20, weight: .medium))
+                        .foregroundStyle(.blue)
+                        .symbolEffect(.rotate, isActive: isGeneratingMontage)
+                }
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Montage")
+                        .font(.system(size: config.captionFontSize, weight: .medium))
+                        .foregroundStyle(.secondary)
+                    Text(isGeneratingMontage ? "Creating..." : "Watch your journey")
+                        .font(.system(size: config.headlineFontSize, weight: .semibold))
+                }
+
+                Spacer()
+
+                if !isGeneratingMontage {
+                    Image(systemName: "play.circle.fill")
+                        .font(.system(size: 32))
+                        .foregroundStyle(.blue)
+                }
+            }
+            .padding(config.cardPadding)
+            .frame(maxWidth: .infinity)
+            .background(.ultraThinMaterial)
+            .clipShape(RoundedRectangle(cornerRadius: config.cardCornerRadius))
+            .glassEffect()
+        }
+        .buttonStyle(.plain)
+        .disabled(isGeneratingMontage)
+    }
+
+    private func generateMontage() async {
+        guard let library = library, !library.allVideos.isEmpty else { return }
+
+        isGeneratingMontage = true
+        defer { isGeneratingMontage = false }
+
+        do {
+            let url = try await VideoCompositionService.shared.createMontage(from: library.allVideos)
+            viewState = .montage(url, library.allVideos.count)
+        } catch {
+            // TODO: Show error alert
+            print("Montage generation failed: \(error)")
+        }
+    }
+
     private func videoDayRow(video: VideoDay) -> some View {
         Button {
-            if let take = video.selectedTake {
+            if video.takeCount > 1 {
+                // Multiple takes - show selector
+                selectedDayForTakes = video
+            } else if let take = video.selectedTake {
+                // Single take - go directly to review
                 selectedTake = take
                 viewState = .reviewing(take)
             }
@@ -380,9 +547,15 @@ struct HomeView: View {
 
                 Spacer()
 
-                Image(systemName: "chevron.right")
-                    .font(.caption)
-                    .foregroundStyle(.tertiary)
+                if video.takeCount > 1 {
+                    Image(systemName: "film.stack")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                } else {
+                    Image(systemName: "chevron.right")
+                        .font(.caption)
+                        .foregroundStyle(.tertiary)
+                }
             }
             .padding(12)
             .background(.ultraThinMaterial)
@@ -448,6 +621,51 @@ struct HomeView: View {
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Done") { showTakeSelector = false }
+                }
+            }
+        }
+    }
+
+    private func dayTakeSelectorSheet(for day: VideoDay) -> some View {
+        NavigationStack {
+            List {
+                ForEach(day.takes) { take in
+                    Button {
+                        selectedTake = take
+                        viewState = .reviewing(take)
+                        selectedDayForTakes = nil
+                    } label: {
+                        HStack {
+                            Image(systemName: "film")
+                                .foregroundStyle(.secondary)
+                            VStack(alignment: .leading) {
+                                Text(take.displayName)
+                                    .font(.headline)
+                                Text(take.createdAt, style: .time)
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+                            Spacer()
+                            Image(systemName: "play.circle.fill")
+                                .font(.title2)
+                                .foregroundStyle(.blue)
+                        }
+                    }
+                    .buttonStyle(.plain)
+                    .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                        Button(role: .destructive) {
+                            Task { try? await library?.deleteTake(take) }
+                        } label: {
+                            Label("Delete", systemImage: "trash")
+                        }
+                    }
+                }
+            }
+            .navigationTitle(day.displayDate)
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Done") { selectedDayForTakes = nil }
                 }
             }
         }

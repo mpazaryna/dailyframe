@@ -30,7 +30,7 @@ targets:
         CODE_SIGN_ENTITLEMENTS: DailyFrame/DailyFrame.entitlements
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         CODE_SIGN_STYLE: Automatic
-        DEVELOPMENT_TEAM: ""
+        DEVELOPMENT_TEAM: KDZZFKGF55
         TARGETED_DEVICE_FAMILY: "1,2"
         SUPPORTS_MACCATALYST: false
         SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD: false
@@ -56,7 +56,7 @@ targets:
         CODE_SIGN_ENTITLEMENTS: DailyFrame/DailyFrame.entitlements
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         CODE_SIGN_STYLE: Automatic
-        DEVELOPMENT_TEAM: ""
+        DEVELOPMENT_TEAM: KDZZFKGF55
         MACOSX_DEPLOYMENT_TARGET: "26.0"
       configs:
         Debug:
