@@ -15,6 +15,7 @@ struct MontageView: View {
 
     @State private var player: AVPlayer
     @State private var showExportSheet = false
+    @State private var loopObserver: NSObjectProtocol?
 
     init(videoURL: URL, videoCount: Int, onDismiss: @escaping () -> Void) {
         self.videoURL = videoURL
@@ -91,6 +92,9 @@ struct MontageView: View {
         }
         .onDisappear {
             player.pause()
+            if let observer = loopObserver {
+                NotificationCenter.default.removeObserver(observer)
+            }
         }
         .sheet(isPresented: $showExportSheet) {
             VideoExportView(videoURL: videoURL) {
@@ -103,11 +107,16 @@ struct MontageView: View {
     }
 
     private func setupLooping() {
-        NotificationCenter.default.addObserver(
+        // Remove any existing observer first
+        if let existing = loopObserver {
+            NotificationCenter.default.removeObserver(existing)
+        }
+
+        loopObserver = NotificationCenter.default.addObserver(
             forName: .AVPlayerItemDidPlayToEndTime,
             object: player.currentItem,
             queue: .main
-        ) { _ in
+        ) { [player] _ in
             player.seek(to: .zero)
             player.play()
         }

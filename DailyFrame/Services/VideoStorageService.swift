@@ -56,6 +56,12 @@ actor VideoStorageService {
         // Copy file to iCloud container
         try FileManager.default.copyItem(at: temporaryURL, to: destinationURL)
 
+        // Set file protection for encryption at rest
+        try FileManager.default.setAttributes(
+            [.protectionKey: FileProtectionType.complete],
+            ofItemAtPath: destinationURL.path
+        )
+
         return destinationURL
     }
 
@@ -63,7 +69,9 @@ actor VideoStorageService {
         guard FileManager.default.fileExists(atPath: take.videoURL.path) else {
             return
         }
-        try FileManager.default.removeItem(at: take.videoURL)
+
+        // Use NSFileCoordinator for safe iCloud deletion
+        try await coordinatedDelete(at: take.videoURL)
     }
 
     func deleteAllTakes(for date: Date) async throws {
@@ -79,7 +87,32 @@ actor VideoStorageService {
 
         for url in contents {
             if url.lastPathComponent.hasPrefix("video_\(dateString)_") {
-                try FileManager.default.removeItem(at: url)
+                try await coordinatedDelete(at: url)
+            }
+        }
+    }
+
+    /// Performs a coordinated file deletion for safe iCloud sync
+    private func coordinatedDelete(at url: URL) async throws {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+            let coordinator = NSFileCoordinator()
+            var coordinatorError: NSError?
+
+            coordinator.coordinate(
+                writingItemAt: url,
+                options: .forDeleting,
+                error: &coordinatorError
+            ) { coordinatedURL in
+                do {
+                    try FileManager.default.removeItem(at: coordinatedURL)
+                    continuation.resume()
+                } catch {
+                    continuation.resume(throwing: error)
+                }
+            }
+
+            if let error = coordinatorError {
+                continuation.resume(throwing: error)
             }
         }
     }

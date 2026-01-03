@@ -5,7 +5,35 @@ import Foundation
 actor VideoCompositionService {
     static let shared = VideoCompositionService()
 
+    private let montagePrefix = "montage_"
+
     private init() {}
+
+    /// Cleans up old montage files from the temp directory
+    /// Call this periodically (e.g., on app launch) to prevent temp file accumulation
+    func cleanupOldMontages(olderThan days: Int = 1) {
+        let tempDirectory = FileManager.default.temporaryDirectory
+        let expirationDate = Date().addingTimeInterval(-TimeInterval(days * 86400))
+
+        guard let contents = try? FileManager.default.contentsOfDirectory(
+            at: tempDirectory,
+            includingPropertiesForKeys: [.contentModificationDateKey],
+            options: .skipsHiddenFiles
+        ) else { return }
+
+        for url in contents {
+            guard url.lastPathComponent.hasPrefix(montagePrefix),
+                  url.pathExtension == "mov" else {
+                continue
+            }
+
+            if let attributes = try? FileManager.default.attributesOfItem(atPath: url.path),
+               let modDate = attributes[.modificationDate] as? Date,
+               modDate < expirationDate {
+                try? FileManager.default.removeItem(at: url)
+            }
+        }
+    }
 
     /// Creates a montage from an array of VideoDay objects
     /// - Parameters:
@@ -113,7 +141,7 @@ actor VideoCompositionService {
 
         // Export
         let outputURL = FileManager.default.temporaryDirectory
-            .appendingPathComponent("montage_\(UUID().uuidString).mov")
+            .appendingPathComponent("\(montagePrefix)\(UUID().uuidString).mov")
 
         // Remove existing file if present
         try? FileManager.default.removeItem(at: outputURL)

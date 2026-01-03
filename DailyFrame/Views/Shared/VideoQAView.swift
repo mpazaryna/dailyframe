@@ -17,6 +17,7 @@ struct VideoQAView: View {
     #endif
 
     @State private var player: AVPlayer
+    @State private var loopObserver: NSObjectProtocol?
 
     init(videoURL: URL, takeNumber: Int, totalTakes: Int, onKeep: @escaping () -> Void, onRedo: @escaping () -> Void, onDelete: @escaping () -> Void) {
         self.videoURL = videoURL
@@ -100,15 +101,23 @@ struct VideoQAView: View {
         }
         .onDisappear {
             player.pause()
+            if let observer = loopObserver {
+                NotificationCenter.default.removeObserver(observer)
+            }
         }
     }
 
     private func setupLooping() {
-        NotificationCenter.default.addObserver(
+        // Remove any existing observer first
+        if let existing = loopObserver {
+            NotificationCenter.default.removeObserver(existing)
+        }
+
+        loopObserver = NotificationCenter.default.addObserver(
             forName: .AVPlayerItemDidPlayToEndTime,
             object: player.currentItem,
             queue: .main
-        ) { _ in
+        ) { [player] _ in
             player.seek(to: .zero)
             player.play()
         }

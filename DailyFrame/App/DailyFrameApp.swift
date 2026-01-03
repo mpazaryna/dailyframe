@@ -14,6 +14,10 @@ struct DailyFrameApp: App {
         WindowGroup {
             ContentView()
                 .environment(\.videoLibrary, library)
+                .task {
+                    // Clean up old montage files on launch
+                    await VideoCompositionService.shared.cleanupOldMontages()
+                }
         }
         #if os(macOS)
         .commands {
