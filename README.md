@@ -2,6 +2,16 @@
 
 A personal video diary app for iOS 26+, iPadOS 26+, and macOS 26+. Capture one video per day, review instantly, sync everywhere.
 
+## Philosophy
+
+**Video only.** DailyFrame captures video, not photos. The constraint is intentional—one medium, one moment per day.
+
+**Privacy first.** This is a private, on-device application with no social media integration. Your videos stay yours. No accounts, no cloud services beyond your personal iCloud, no analytics, no sharing to platforms.
+
+**Export to people, not platforms.** Share directly with individuals, save to Apple Journal, or add to Apple Notes. We deliberately avoid any connection to social media. The share sheet is there for you to send a video to a friend, not to broadcast to the world.
+
+**Simple and focused.** DailyFrame is similar in spirit to apps like 1SE (One Second Everyday), but intentionally smaller in scope. No subscriptions, no premium tiers—just a one-time purchase at an accessible price point. Built as a personal project to learn Apple's development ecosystem end-to-end.
+
 ## Quick Start
 
 ```bash
