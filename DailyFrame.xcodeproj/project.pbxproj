@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 77;
+	objectVersion = 63;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -19,6 +19,7 @@
 		32E36500E0F38C9B1BD827C8 /* VideoExportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4755550B3EDB959EE25857FE /* VideoExportView.swift */; };
 		3BB4F18B2CAC9F61156E79A5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF0A7823D25B10D7C86E897 /* AppDelegate.swift */; };
 		3F112CECBF74046F859EE9EA /* RecordingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15836CF865FA1E417DE7EE7F /* RecordingView.swift */; };
+		430CE27436E9DA76F33354D4 /* ThumbnailStripView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96396494BD5512C30DBCB6A2 /* ThumbnailStripView.swift */; };
 		52D0E707B34DF83DEB1DED9C /* SyncState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0224EB66DE0E844822D253E /* SyncState.swift */; };
 		5990F5423FE62220F9090C54 /* PlatformConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = D789923971D2707F0ADB2EFD /* PlatformConfig.swift */; };
 		5C642AE4EFDF5AA52B38C77B /* VideoDay.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC43800ABA2A2B771763EACC /* VideoDay.swift */; };
@@ -27,6 +28,7 @@
 		74374B51CF0E15848AD503BD /* iCloudSyncService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD9CF16388FD0880A7CAED8 /* iCloudSyncService.swift */; };
 		7B37245408AD976DF9164025 /* VideoExportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4755550B3EDB959EE25857FE /* VideoExportView.swift */; };
 		814E515E732E377929FF504B /* VideoExportService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0658AE0DA80B736ABFE69C1D /* VideoExportService.swift */; };
+		83DFF5966D9C24DB58BF4A65 /* TrimRangeSliderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4F6252DDFFB55003E332149 /* TrimRangeSliderView.swift */; };
 		88101BF9A78FA8CEA95E529A /* DateUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631F24F01238AB784E20126F /* DateUtilities.swift */; };
 		892E7E41F5E55946EB3CC000 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF0A7823D25B10D7C86E897 /* AppDelegate.swift */; };
 		907719619E3761F05A0931C3 /* PlatformConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = D789923971D2707F0ADB2EFD /* PlatformConfig.swift */; };
@@ -43,16 +45,20 @@
 		C3715C8ECD60AF611ACCFDDA /* VideoExportService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0658AE0DA80B736ABFE69C1D /* VideoExportService.swift */; };
 		C526AB98253831F24507A867 /* SyncState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0224EB66DE0E844822D253E /* SyncState.swift */; };
 		C591016084CE5D9E82EBEFF0 /* CameraService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E46D5AC9B264B87FDC9762 /* CameraService.swift */; };
+		C87477513DBF557371756C2F /* TrimRangeSliderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4F6252DDFFB55003E332149 /* TrimRangeSliderView.swift */; };
 		CF56C7543B15F2F99D0404B0 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5155E8CD32C76FD59860982D /* ContentView.swift */; };
 		D15A20C53A8A1774538FD4C8 /* PlatformDetection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A5EA184D06BFD1444E8604 /* PlatformDetection.swift */; };
 		D2B0E7BA7F359CDCEE1E3313 /* MontageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38BF5D2462E487A852444E56 /* MontageView.swift */; };
+		D3EBA1A7BBB10C40A7348632 /* ThumbnailStripView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96396494BD5512C30DBCB6A2 /* ThumbnailStripView.swift */; };
 		D662A73070B7D904EDAD763A /* DateUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631F24F01238AB784E20126F /* DateUtilities.swift */; };
 		D8652C96937C165E1C6BBC9A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 16B50D517129CFCF49F827AA /* Assets.xcassets */; };
 		DA45CCC65DE576E49C55734E /* VideoQAView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B6E6D715EB14E23FA19721 /* VideoQAView.swift */; };
 		DBF78A07F00B923AD85EA771 /* PermissionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3362A3275C9E541C6C6B07 /* PermissionManager.swift */; };
 		E3B8078AD03577BE67E86078 /* MontageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38BF5D2462E487A852444E56 /* MontageView.swift */; };
+		E3FEEC1C48C406ECA362D8F0 /* VideoTrimmingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F803BF72090F5B99366D67 /* VideoTrimmingView.swift */; };
 		EE31086B19C79298F18E0CAD /* AppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 244A34E27376C3B7B148E56F /* AppError.swift */; };
 		F227C04E670C093563661D66 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5155E8CD32C76FD59860982D /* ContentView.swift */; };
+		F31D50B3A861294EC7CEF7CD /* VideoTrimmingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F803BF72090F5B99366D67 /* VideoTrimmingView.swift */; };
 		F6A86D003858FB6C9BC2E6F8 /* VideoStorageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DACA237477A4B8E1929B6DA0 /* VideoStorageService.swift */; };
 		F953CFDCCD8FA287D77949F1 /* VideoDay.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC43800ABA2A2B771763EACC /* VideoDay.swift */; };
 /* End PBXBuildFile section */
@@ -63,7 +69,7 @@
 		0BF2E977BCA0E1842FD356C3 /* VideoCompositionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCompositionService.swift; sourceTree = "<group>"; };
 		15836CF865FA1E417DE7EE7F /* RecordingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingView.swift; sourceTree = "<group>"; };
 		16B50D517129CFCF49F827AA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		18057BC020CE2F7F3AD2D1A5 /* DailyFrame-macOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "DailyFrame-macOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		18057BC020CE2F7F3AD2D1A5 /* DailyFrame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DailyFrame.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1AD9CF16388FD0880A7CAED8 /* iCloudSyncService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iCloudSyncService.swift; sourceTree = "<group>"; };
 		244A34E27376C3B7B148E56F /* AppError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppError.swift; sourceTree = "<group>"; };
 		2E3362A3275C9E541C6C6B07 /* PermissionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionManager.swift; sourceTree = "<group>"; };
@@ -77,9 +83,12 @@
 		7CF0A7823D25B10D7C86E897 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8F236AC5E2AA586D26212D9D /* DailyFrame.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = DailyFrame.entitlements; sourceTree = "<group>"; };
 		93A5EA184D06BFD1444E8604 /* PlatformDetection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlatformDetection.swift; sourceTree = "<group>"; };
+		96396494BD5512C30DBCB6A2 /* ThumbnailStripView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailStripView.swift; sourceTree = "<group>"; };
 		A0224EB66DE0E844822D253E /* SyncState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncState.swift; sourceTree = "<group>"; };
+		A2F803BF72090F5B99366D67 /* VideoTrimmingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoTrimmingView.swift; sourceTree = "<group>"; };
 		A388B326343259B25357B184 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
-		C521A5959F11E0FBF3BB2D7D /* DailyFrame-iOS.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = "DailyFrame-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		A4F6252DDFFB55003E332149 /* TrimRangeSliderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrimRangeSliderView.swift; sourceTree = "<group>"; };
+		C521A5959F11E0FBF3BB2D7D /* DailyFrame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DailyFrame.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CA969F0721764640424B827D /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
 		CC43800ABA2A2B771763EACC /* VideoDay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoDay.swift; sourceTree = "<group>"; };
 		D0B6E6D715EB14E23FA19721 /* VideoQAView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoQAView.swift; sourceTree = "<group>"; };
@@ -133,8 +142,11 @@
 			children = (
 				38BF5D2462E487A852444E56 /* MontageView.swift */,
 				02C6CAB2392CEFDBB6773226 /* SyncStatusView.swift */,
+				96396494BD5512C30DBCB6A2 /* ThumbnailStripView.swift */,
+				A4F6252DDFFB55003E332149 /* TrimRangeSliderView.swift */,
 				4755550B3EDB959EE25857FE /* VideoExportView.swift */,
 				D0B6E6D715EB14E23FA19721 /* VideoQAView.swift */,
+				A2F803BF72090F5B99366D67 /* VideoTrimmingView.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -142,8 +154,8 @@
 		7F4D691EBB4B4583FFF1A7B0 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				C521A5959F11E0FBF3BB2D7D /* DailyFrame-iOS.app */,
-				18057BC020CE2F7F3AD2D1A5 /* DailyFrame-macOS.app */,
+				C521A5959F11E0FBF3BB2D7D /* DailyFrame.app */,
+				18057BC020CE2F7F3AD2D1A5 /* DailyFrame.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -221,7 +233,7 @@
 			packageProductDependencies = (
 			);
 			productName = "DailyFrame-macOS";
-			productReference = 18057BC020CE2F7F3AD2D1A5 /* DailyFrame-macOS.app */;
+			productReference = 18057BC020CE2F7F3AD2D1A5 /* DailyFrame.app */;
 			productType = "com.apple.product-type.application";
 		};
 		5146855AE6BB273C1BF06FA5 /* DailyFrame-iOS */ = {
@@ -239,7 +251,7 @@
 			packageProductDependencies = (
 			);
 			productName = "DailyFrame-iOS";
-			productReference = C521A5959F11E0FBF3BB2D7D /* DailyFrame-iOS.app */;
+			productReference = C521A5959F11E0FBF3BB2D7D /* DailyFrame.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -249,7 +261,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
-				LastUpgradeCheck = 1610;
+				LastUpgradeCheck = 2620;
 				TargetAttributes = {
 					4D87BED0BACB9C604D0A4E9B = {
 						DevelopmentTeam = KDZZFKGF55;
@@ -271,7 +283,6 @@
 			);
 			mainGroup = BBC01A1C4D4CA14F58062E1A;
 			minimizedProjectReferenceProxies = 1;
-			preferredProjectObjectVersion = 77;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -320,6 +331,8 @@
 				2AC31C3556D01DE1C3BB2D9C /* RecordingView.swift in Sources */,
 				C526AB98253831F24507A867 /* SyncState.swift in Sources */,
 				184C2F41236C33525514FB48 /* SyncStatusView.swift in Sources */,
+				D3EBA1A7BBB10C40A7348632 /* ThumbnailStripView.swift in Sources */,
+				83DFF5966D9C24DB58BF4A65 /* TrimRangeSliderView.swift in Sources */,
 				12C0AE648F2F1F988ADD4819 /* VideoCompositionService.swift in Sources */,
 				F953CFDCCD8FA287D77949F1 /* VideoDay.swift in Sources */,
 				814E515E732E377929FF504B /* VideoExportService.swift in Sources */,
@@ -327,6 +340,7 @@
 				BBAC92C45D1BD3148350F793 /* VideoLibrary.swift in Sources */,
 				BFD1F4245A4FABD539E14330 /* VideoQAView.swift in Sources */,
 				F6A86D003858FB6C9BC2E6F8 /* VideoStorageService.swift in Sources */,
+				E3FEEC1C48C406ECA362D8F0 /* VideoTrimmingView.swift in Sources */,
 				74374B51CF0E15848AD503BD /* iCloudSyncService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -350,6 +364,8 @@
 				3F112CECBF74046F859EE9EA /* RecordingView.swift in Sources */,
 				52D0E707B34DF83DEB1DED9C /* SyncState.swift in Sources */,
 				9385B6C14124C212EA838D1F /* SyncStatusView.swift in Sources */,
+				430CE27436E9DA76F33354D4 /* ThumbnailStripView.swift in Sources */,
+				C87477513DBF557371756C2F /* TrimRangeSliderView.swift in Sources */,
 				AB90E9275B0444F8CE38137F /* VideoCompositionService.swift in Sources */,
 				5C642AE4EFDF5AA52B38C77B /* VideoDay.swift in Sources */,
 				C3715C8ECD60AF611ACCFDDA /* VideoExportService.swift in Sources */,
@@ -357,6 +373,7 @@
 				A172F133614987F44DB98F63 /* VideoLibrary.swift in Sources */,
 				DA45CCC65DE576E49C55734E /* VideoQAView.swift in Sources */,
 				1604E70EB5D2B6C366748106 /* VideoStorageService.swift in Sources */,
+				F31D50B3A861294EC7CEF7CD /* VideoTrimmingView.swift in Sources */,
 				17F8F4DC5F083A9D464BB636 /* iCloudSyncService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -372,7 +389,8 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = KDZZFKGF55;
+				DEAD_CODE_STRIPPING = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = DailyFrame/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -396,7 +414,6 @@
 				CODE_SIGN_ENTITLEMENTS = DailyFrame/DailyFrame.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = KDZZFKGF55;
 				INFOPLIST_FILE = DailyFrame/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -445,7 +462,9 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = KDZZFKGF55;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
@@ -470,6 +489,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 6.0;
@@ -484,7 +504,8 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = KDZZFKGF55;
+				DEAD_CODE_STRIPPING = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = DailyFrame/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -508,7 +529,6 @@
 				CODE_SIGN_ENTITLEMENTS = DailyFrame/DailyFrame.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = KDZZFKGF55;
 				INFOPLIST_FILE = DailyFrame/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -557,7 +577,9 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = KDZZFKGF55;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
@@ -575,6 +597,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 6.0;

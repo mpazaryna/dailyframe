@@ -82,6 +82,15 @@ struct HomeView: View {
                         viewState = .home
                         selectedTake = nil
                     }
+                },
+                onTrimmed: { trimmedURL in
+                    Task {
+                        if let newTake = try? await library?.replaceTakeWithTrimmed(take, trimmedURL: trimmedURL) {
+                            selectedTake = newTake
+                            showExportSheet = true
+                        }
+                        viewState = .home
+                    }
                 }
             )
         case .montage(let url, let count):
@@ -370,9 +379,48 @@ struct HomeView: View {
     @ViewBuilder
     private var macOSDetail: some View {
         if let take = selectedTake {
-            MacVideoPlayer(videoURL: take.videoURL)
+            MacVideoDetailView(
+                take: take,
+                onDelete: {
+                    Task {
+                        try? await library?.deleteTake(take)
+                        selectedTake = nil
+                    }
+                },
+                onTrimmed: { trimmedURL in
+                    Task {
+                        if let newTake = try? await library?.replaceTakeWithTrimmed(take, trimmedURL: trimmedURL) {
+                            selectedTake = newTake
+                            showExportSheet = true
+                        }
+                    }
+                },
+                onExport: {
+                    showExportSheet = true
+                }
+            )
         } else if let video = selectedVideo, let take = video.selectedTake {
-            MacVideoPlayer(videoURL: take.videoURL)
+            MacVideoDetailView(
+                take: take,
+                onDelete: {
+                    Task {
+                        try? await library?.deleteTake(take)
+                        selectedVideo = nil
+                    }
+                },
+                onTrimmed: { trimmedURL in
+                    Task {
+                        if let newTake = try? await library?.replaceTakeWithTrimmed(take, trimmedURL: trimmedURL) {
+                            selectedTake = newTake
+                            showExportSheet = true
+                        }
+                    }
+                },
+                onExport: {
+                    selectedTake = take
+                    showExportSheet = true
+                }
+            )
         } else {
             VStack(spacing: 16) {
                 Image(systemName: "play.rectangle")
@@ -673,26 +721,83 @@ struct HomeView: View {
     #endif
 }
 
-// MARK: - macOS Video Player
+// MARK: - macOS Video Player with Actions
 
 #if os(macOS)
-private struct MacVideoPlayer: View {
-    let videoURL: URL
+private struct MacVideoDetailView: View {
+    let take: VideoTake
+    let onDelete: () -> Void
+    let onTrimmed: (URL) -> Void
+    let onExport: () -> Void
+
     @State private var player: AVPlayer?
+    @State private var showTrimming = false
+
+    private var config: VideoQALayoutConfig { VideoQALayoutConfig.current }
 
     var body: some View {
-        VideoPlayer(player: player)
-            .onAppear {
-                player = AVPlayer(url: videoURL)
+        VStack(spacing: 0) {
+            // Video player
+            VideoPlayer(player: player)
+                .onAppear {
+                    player = AVPlayer(url: take.videoURL)
+                }
+                .onDisappear {
+                    player?.pause()
+                    player = nil
+                }
+                .onChange(of: take.videoURL) { _, newURL in
+                    player?.pause()
+                    player = AVPlayer(url: newURL)
+                }
+
+            // Action buttons bar
+            HStack(spacing: 20) {
+                Button {
+                    player?.pause()
+                    onDelete()
+                } label: {
+                    Label("Delete", systemImage: "trash")
+                }
+                .buttonStyle(.bordered)
+                .tint(.red)
+
+                Button {
+                    player?.pause()
+                    showTrimming = true
+                } label: {
+                    Label("Trim", systemImage: "scissors")
+                }
+                .buttonStyle(.bordered)
+
+                Spacer()
+
+                Button {
+                    player?.pause()
+                    onExport()
+                } label: {
+                    Label("Export", systemImage: "square.and.arrow.up")
+                }
+                .buttonStyle(.borderedProminent)
             }
-            .onDisappear {
-                player?.pause()
-                player = nil
-            }
-            .onChange(of: videoURL) { _, newURL in
-                player?.pause()
-                player = AVPlayer(url: newURL)
-            }
+            .padding()
+            .background(.bar)
+        }
+        .sheet(isPresented: $showTrimming) {
+            VideoTrimmingView(
+                videoURL: take.videoURL,
+                onCancel: {
+                    showTrimming = false
+                    player?.seek(to: .zero)
+                    player?.play()
+                },
+                onComplete: { trimmedURL in
+                    showTrimming = false
+                    onTrimmed(trimmedURL)
+                }
+            )
+            .frame(minWidth: 600, minHeight: 500)
+        }
     }
 }
 #endif

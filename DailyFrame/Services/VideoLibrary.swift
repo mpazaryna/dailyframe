@@ -152,6 +152,36 @@ final class VideoLibrary {
     func getNextTakeNumber() async -> Int {
         await storageService.getNextTakeNumber(for: Date())
     }
+
+    /// Replaces a take with a trimmed version
+    /// - Parameters:
+    ///   - take: The original take to replace
+    ///   - trimmedURL: URL to the trimmed video in temp directory
+    /// - Returns: The new take with trimmed video
+    func replaceTakeWithTrimmed(_ take: VideoTake, trimmedURL: URL) async throws -> VideoTake {
+        // Delete the original take first
+        try await storageService.deleteTake(take)
+
+        // Save the trimmed video with the same date and take number
+        let savedURL = try await storageService.saveVideo(
+            from: trimmedURL,
+            for: take.date,
+            takeNumber: take.takeNumber
+        )
+
+        // Clean up temp file
+        try? FileManager.default.removeItem(at: trimmedURL)
+
+        let newTake = VideoTake(
+            date: take.date,
+            takeNumber: take.takeNumber,
+            videoURL: savedURL,
+            isSelected: take.isSelected
+        )
+
+        await loadVideos()
+        return newTake
+    }
 }
 
 // MARK: - Environment Key

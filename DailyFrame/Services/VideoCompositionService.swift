@@ -171,6 +171,98 @@ actor VideoCompositionService {
         }
     }
 
+    /// Trims a video to the specified time range
+    /// - Parameters:
+    ///   - videoURL: Source video URL
+    ///   - startTime: Start time in seconds
+    ///   - endTime: End time in seconds
+    /// - Returns: URL to the trimmed video file
+    func trimVideo(at videoURL: URL, startTime: Double, endTime: Double) async throws -> URL {
+        let asset = AVURLAsset(url: videoURL)
+        let duration = try await asset.load(.duration)
+
+        // Validate time range
+        let maxSeconds = CMTimeGetSeconds(duration)
+        let validStart = max(0, min(startTime, maxSeconds))
+        let validEnd = max(validStart, min(endTime, maxSeconds))
+
+        guard validEnd > validStart else {
+            throw AppError.compositionFailed("Invalid trim range")
+        }
+
+        let startCMTime = CMTime(seconds: validStart, preferredTimescale: 600)
+        let endCMTime = CMTime(seconds: validEnd, preferredTimescale: 600)
+        let timeRange = CMTimeRange(start: startCMTime, end: endCMTime)
+
+        // Create output URL
+        let outputURL = FileManager.default.temporaryDirectory
+            .appendingPathComponent("trimmed_\(UUID().uuidString).mov")
+
+        // Remove existing file if present
+        try? FileManager.default.removeItem(at: outputURL)
+
+        guard let exportSession = AVAssetExportSession(
+            asset: asset,
+            presetName: AVAssetExportPresetHighestQuality
+        ) else {
+            throw AppError.compositionFailed("Failed to create export session")
+        }
+
+        exportSession.outputURL = outputURL
+        exportSession.outputFileType = .mov
+        exportSession.timeRange = timeRange
+
+        await exportSession.export()
+
+        switch exportSession.status {
+        case .completed:
+            return outputURL
+        case .failed:
+            throw exportSession.error ?? AppError.compositionFailed("Trim export failed")
+        case .cancelled:
+            throw AppError.compositionFailed("Trim export cancelled")
+        default:
+            throw AppError.compositionFailed("Unknown trim export error")
+        }
+    }
+
+    /// Generates thumbnail images from a video at specified intervals
+    /// - Parameters:
+    ///   - videoURL: Source video URL
+    ///   - count: Number of thumbnails to generate
+    /// - Returns: Array of CGImages representing frames at even intervals
+    func generateThumbnails(for videoURL: URL, count: Int) async throws -> [CGImage] {
+        let asset = AVURLAsset(url: videoURL)
+        let duration = try await asset.load(.duration)
+        let totalSeconds = CMTimeGetSeconds(duration)
+
+        guard totalSeconds > 0, count > 0 else {
+            return []
+        }
+
+        let generator = AVAssetImageGenerator(asset: asset)
+        generator.appliesPreferredTrackTransform = true
+        generator.maximumSize = CGSize(width: 200, height: 200)
+        generator.requestedTimeToleranceBefore = CMTime(seconds: 0.1, preferredTimescale: 600)
+        generator.requestedTimeToleranceAfter = CMTime(seconds: 0.1, preferredTimescale: 600)
+
+        var thumbnails: [CGImage] = []
+        let interval = totalSeconds / Double(count)
+
+        for i in 0..<count {
+            let time = CMTime(seconds: Double(i) * interval, preferredTimescale: 600)
+            do {
+                let (image, _) = try await generator.image(at: time)
+                thumbnails.append(image)
+            } catch {
+                // Skip failed frames, continue with others
+                continue
+            }
+        }
+
+        return thumbnails
+    }
+
     /// Normalizes a video transform to fit the output size
     private func normalizeTransform(_ transform: CGAffineTransform, trackSize: CGSize, outputSize: CGSize) -> CGAffineTransform {
         // Detect rotation from transform

@@ -8,6 +8,7 @@ struct VideoQAView: View {
     let onKeep: () -> Void
     let onRedo: () -> Void
     let onDelete: () -> Void
+    let onTrimmed: ((URL) -> Void)?
 
     #if os(iOS)
     @Environment(\.horizontalSizeClass) private var sizeClass
@@ -18,14 +19,24 @@ struct VideoQAView: View {
 
     @State private var player: AVPlayer
     @State private var loopObserver: NSObjectProtocol?
+    @State private var showTrimming = false
 
-    init(videoURL: URL, takeNumber: Int, totalTakes: Int, onKeep: @escaping () -> Void, onRedo: @escaping () -> Void, onDelete: @escaping () -> Void) {
+    init(
+        videoURL: URL,
+        takeNumber: Int,
+        totalTakes: Int,
+        onKeep: @escaping () -> Void,
+        onRedo: @escaping () -> Void,
+        onDelete: @escaping () -> Void,
+        onTrimmed: ((URL) -> Void)? = nil
+    ) {
         self.videoURL = videoURL
         self.takeNumber = takeNumber
         self.totalTakes = totalTakes
         self.onKeep = onKeep
         self.onRedo = onRedo
         self.onDelete = onDelete
+        self.onTrimmed = onTrimmed
         self._player = State(initialValue: AVPlayer(url: videoURL))
     }
 
@@ -70,6 +81,18 @@ struct VideoQAView: View {
                             onDelete()
                         }
 
+                        if onTrimmed != nil {
+                            QAButton(
+                                title: "Trim",
+                                systemImage: "scissors",
+                                style: .secondary,
+                                config: config
+                            ) {
+                                player.pause()
+                                showTrimming = true
+                            }
+                        }
+
                         QAButton(
                             title: "Retake",
                             systemImage: "arrow.counterclockwise",
@@ -95,6 +118,38 @@ struct VideoQAView: View {
                 }
             }
         }
+        #if os(iOS)
+        .fullScreenCover(isPresented: $showTrimming) {
+            VideoTrimmingView(
+                videoURL: videoURL,
+                onCancel: {
+                    showTrimming = false
+                    player.seek(to: .zero)
+                    player.play()
+                },
+                onComplete: { trimmedURL in
+                    showTrimming = false
+                    onTrimmed?(trimmedURL)
+                }
+            )
+        }
+        #else
+        .sheet(isPresented: $showTrimming) {
+            VideoTrimmingView(
+                videoURL: videoURL,
+                onCancel: {
+                    showTrimming = false
+                    player.seek(to: .zero)
+                    player.play()
+                },
+                onComplete: { trimmedURL in
+                    showTrimming = false
+                    onTrimmed?(trimmedURL)
+                }
+            )
+            .frame(minWidth: 600, minHeight: 500)
+        }
+        #endif
         .onAppear {
             player.play()
             setupLooping()
@@ -183,6 +238,7 @@ struct QAButton: View {
         totalTakes: 3,
         onKeep: {},
         onRedo: {},
-        onDelete: {}
+        onDelete: {},
+        onTrimmed: { _ in }
     )
 }

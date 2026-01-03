@@ -426,6 +426,106 @@ struct VideoBrowserLayoutConfig {
     #endif
 }
 
+// MARK: - Video Trimming Configuration
+
+/// VideoTrimmingView layout configuration with flattened base properties.
+///
+/// Adapts video trimming interface for all platforms with thumbnail strip,
+/// range slider, and playback controls.
+struct VideoTrimmingConfig {
+    // MARK: Inherited Base Properties (Flattened)
+    let cardPadding: CGFloat
+    let bodyFontSize: CGFloat
+    let headlineFontSize: CGFloat
+    let captionFontSize: CGFloat
+
+    // MARK: Trimming-Specific Properties
+    /// Height of the thumbnail strip
+    let thumbnailStripHeight: CGFloat
+    /// Number of thumbnails to generate
+    let thumbnailCount: Int
+    /// Corner radius for thumbnails
+    let thumbnailCornerRadius: CGFloat
+    /// Height of the range slider track
+    let sliderTrackHeight: CGFloat
+    /// Size of the range slider handles
+    let handleSize: CGFloat
+    /// Width of the handle grip lines
+    let handleGripWidth: CGFloat
+    /// Minimum selectable duration in seconds
+    let minimumDuration: Double
+    /// Bottom padding for controls
+    let bottomPadding: CGFloat
+    /// Top bar height
+    let topBarHeight: CGFloat
+    /// Action button width
+    let actionButtonWidth: CGFloat
+    /// Action button height
+    let actionButtonHeight: CGFloat
+
+    #if os(iOS)
+    static func current(_ sizeClass: UserInterfaceSizeClass?) -> Self {
+        let base = BasePlatformConfig.current(sizeClass)
+        return sizeClass == .regular
+            ? Self(  // iPad
+                cardPadding: base.cardPadding,
+                bodyFontSize: base.bodyFontSize,
+                headlineFontSize: base.headlineFontSize,
+                captionFontSize: base.captionFontSize,
+                thumbnailStripHeight: 60,
+                thumbnailCount: 12,
+                thumbnailCornerRadius: 6,
+                sliderTrackHeight: 60,
+                handleSize: 24,
+                handleGripWidth: 3,
+                minimumDuration: 1.0,
+                bottomPadding: 50,
+                topBarHeight: 60,
+                actionButtonWidth: 120,
+                actionButtonHeight: 50
+            )
+            : Self(  // iPhone
+                cardPadding: base.cardPadding,
+                bodyFontSize: base.bodyFontSize,
+                headlineFontSize: base.headlineFontSize,
+                captionFontSize: base.captionFontSize,
+                thumbnailStripHeight: 50,
+                thumbnailCount: 10,
+                thumbnailCornerRadius: 4,
+                sliderTrackHeight: 50,
+                handleSize: 20,
+                handleGripWidth: 2,
+                minimumDuration: 1.0,
+                bottomPadding: 40,
+                topBarHeight: 50,
+                actionButtonWidth: 100,
+                actionButtonHeight: 44
+            )
+    }
+    #else
+    static var current: Self {  // macOS
+        let base = BasePlatformConfig.current
+        return Self(
+            cardPadding: base.cardPadding,
+            bodyFontSize: base.bodyFontSize,
+            headlineFontSize: base.headlineFontSize,
+            captionFontSize: base.captionFontSize,
+            thumbnailStripHeight: 50,
+            thumbnailCount: 12,
+            thumbnailCornerRadius: 4,
+            sliderTrackHeight: 50,
+            handleSize: 20,
+            handleGripWidth: 2,
+            minimumDuration: 1.0,
+            bottomPadding: 30,
+            topBarHeight: 50,
+            actionButtonWidth: 100,
+            actionButtonHeight: 36
+        )
+    }
+    #endif
+}
+
 // MARK: - Calendar Layout Config
 
 struct CalendarLayoutConfig {
