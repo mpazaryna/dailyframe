@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(open -a Simulator)",
+      "Bash(xcrun simctl install:*)",
+      "Bash(xcrun simctl spawn:*)"
+    ]
+  }
+}

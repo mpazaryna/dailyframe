@@ -54,6 +54,10 @@ ADRs capture the *why* behind significant technical decisions. When we choose a 
 
 The devlog is a chronological record of significant development sessions. Unlike commit messages (which describe *what* changed), devlog entries capture the narrative—problems encountered, solutions discovered, and context that doesn't fit elsewhere. It's the story of how the project evolved, useful for onboarding and for remembering why certain rabbit holes were explored.
 
+### [MCP Server](docs/mcp/)
+
+Using MCP servers 
+
 ---
 
 ## Issues & Tracking
