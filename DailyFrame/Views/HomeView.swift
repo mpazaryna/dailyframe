@@ -20,7 +20,20 @@ struct HomeView: View {
         case home
         case recording
         case reviewing(VideoTake)
-        case montage(URL, Int) // URL to montage, video count
+        case montage(MontageResult)
+
+        static func == (lhs: ViewState, rhs: ViewState) -> Bool {
+            switch (lhs, rhs) {
+            case (.home, .home), (.recording, .recording):
+                return true
+            case let (.reviewing(t1), .reviewing(t2)):
+                return t1 == t2
+            case let (.montage(r1), .montage(r2)):
+                return r1.videoURL == r2.videoURL
+            default:
+                return false
+            }
+        }
     }
 
     @State private var viewState: ViewState = .home
@@ -32,7 +45,7 @@ struct HomeView: View {
     @State private var selectedDayForTakes: VideoDay?
     @State private var isGeneratingMontage = false
     @State private var showMontage = false
-    @State private var montageURL: URL?
+    @State private var montageResult: MontageResult?
     @State private var showImportView = false
 
     var body: some View {
@@ -94,10 +107,10 @@ struct HomeView: View {
                     }
                 }
             )
-        case .montage(let url, let count):
+        case .montage(let result):
             MontageView(
-                videoURL: url,
-                videoCount: count,
+                videoURL: result.videoURL,
+                clips: result.clips,
                 onDismiss: {
                     viewState = .home
                 }
@@ -276,10 +289,10 @@ struct HomeView: View {
             }
         }
         .sheet(isPresented: $showMontage) {
-            if let montageURL = montageURL {
+            if let result = montageResult {
                 MontageView(
-                    videoURL: montageURL,
-                    videoCount: library?.allVideos.count ?? 0,
+                    videoURL: result.videoURL,
+                    clips: result.clips,
                     onDismiss: {
                         showMontage = false
                     }
@@ -330,8 +343,8 @@ struct HomeView: View {
         defer { isGeneratingMontage = false }
 
         do {
-            let url = try await VideoCompositionService.shared.createMontage(from: library.allVideos)
-            montageURL = url
+            let result = try await VideoCompositionService.shared.createMontage(from: library.allVideos)
+            montageResult = result
             showMontage = true
         } catch {
             print("Montage generation failed: \(error)")
@@ -604,8 +617,8 @@ struct HomeView: View {
         defer { isGeneratingMontage = false }
 
         do {
-            let url = try await VideoCompositionService.shared.createMontage(from: library.allVideos)
-            viewState = .montage(url, library.allVideos.count)
+            let result = try await VideoCompositionService.shared.createMontage(from: library.allVideos)
+            viewState = .montage(result)
         } catch {
             // TODO: Show error alert
             print("Montage generation failed: \(error)")

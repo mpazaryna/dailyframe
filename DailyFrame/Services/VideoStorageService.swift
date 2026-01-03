@@ -191,10 +191,14 @@ actor VideoStorageService {
     }
 
     func getNextTakeNumber(for date: Date) async -> Int {
-        guard let todayVideo = await getTodaysVideo(),
-              Calendar.current.isDate(todayVideo.date, inSameDayAs: date) else {
+        let allVideos = await loadAllVideos()
+        let normalizedDate = Calendar.current.startOfDay(for: date)
+
+        guard let dayVideo = allVideos.first(where: {
+            Calendar.current.isDate($0.date, inSameDayAs: normalizedDate)
+        }) else {
             return 1
         }
-        return todayVideo.nextTakeNumber
+        return dayVideo.nextTakeNumber
     }
 }

@@ -1,6 +1,20 @@
 import AVFoundation
 import Foundation
 
+/// Represents timing information for a clip in the montage
+struct MontageClip: Sendable {
+    let date: Date
+    let startTime: Double  // seconds from start of montage
+    let endTime: Double    // seconds from start of montage
+}
+
+/// Result of creating a montage, includes timing data for overlays
+struct MontageResult: Sendable {
+    let videoURL: URL
+    let clips: [MontageClip]
+    let totalDuration: Double
+}
+
 /// Service for composing multiple videos into a single montage
 actor VideoCompositionService {
     static let shared = VideoCompositionService()
@@ -39,8 +53,8 @@ actor VideoCompositionService {
     /// - Parameters:
     ///   - videos: Array of VideoDay objects (will be sorted oldest to newest)
     ///   - secondsPerClip: Duration to use from each video (default 3 seconds)
-    /// - Returns: URL to the exported montage video file
-    func createMontage(from videos: [VideoDay], secondsPerClip: Double = 3.0) async throws -> URL {
+    /// - Returns: MontageResult containing URL and clip timing data
+    func createMontage(from videos: [VideoDay], secondsPerClip: Double = 3.0) async throws -> MontageResult {
         // Sort videos oldest to newest for chronological montage
         let sortedVideos = videos.sorted { $0.date < $1.date }
 
@@ -75,8 +89,9 @@ actor VideoCompositionService {
         // Track video settings for consistent output
         var naturalSize: CGSize = .zero
         var videoInstructions: [AVMutableVideoCompositionLayerInstruction] = []
+        var montageClips: [MontageClip] = []
 
-        for (_, take) in videosWithTakes {
+        for (day, take) in videosWithTakes {
             let asset = AVURLAsset(url: take.videoURL)
 
             // Load tracks
@@ -112,6 +127,15 @@ actor VideoCompositionService {
                 let normalizedTransform = normalizeTransform(transform, trackSize: trackSize, outputSize: naturalSize)
                 instruction.setTransform(normalizedTransform, at: currentTime)
                 videoInstructions.append(instruction)
+
+                // Track clip timing for date overlay
+                let startSeconds = CMTimeGetSeconds(currentTime)
+                let endSeconds = startSeconds + CMTimeGetSeconds(duration)
+                montageClips.append(MontageClip(
+                    date: day.date,
+                    startTime: startSeconds,
+                    endTime: endSeconds
+                ))
             } catch {
                 continue // Skip problematic videos
             }
@@ -128,6 +152,8 @@ actor VideoCompositionService {
         guard currentTime > .zero else {
             throw AppError.compositionFailed("No valid video segments to compose")
         }
+
+        let totalDuration = CMTimeGetSeconds(currentTime)
 
         // Create video composition for orientation handling
         let videoComposition = AVMutableVideoComposition()
@@ -161,7 +187,11 @@ actor VideoCompositionService {
 
         switch exportSession.status {
         case .completed:
-            return outputURL
+            return MontageResult(
+                videoURL: outputURL,
+                clips: montageClips,
+                totalDuration: totalDuration
+            )
         case .failed:
             throw exportSession.error ?? AppError.compositionFailed("Export failed")
         case .cancelled:
