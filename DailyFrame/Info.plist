@@ -24,6 +24,8 @@
 	<string>DailyFrame needs camera access to record your daily videos.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>DailyFrame needs microphone access to capture audio for your videos.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>DailyFrame needs photo library access to import existing videos into your daily collection.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

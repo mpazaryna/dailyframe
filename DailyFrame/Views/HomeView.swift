@@ -33,6 +33,7 @@ struct HomeView: View {
     @State private var isGeneratingMontage = false
     @State private var showMontage = false
     @State private var montageURL: URL?
+    @State private var showImportView = false
 
     var body: some View {
         Group {
@@ -132,10 +133,18 @@ struct HomeView: View {
             .navigationTitle("DailyFrame")
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    Button {
-                        showCalendar = true
-                    } label: {
-                        Image(systemName: "calendar")
+                    HStack(spacing: 16) {
+                        Button {
+                            showCalendar = true
+                        } label: {
+                            Image(systemName: "calendar")
+                        }
+
+                        Button {
+                            showImportView = true
+                        } label: {
+                            Image(systemName: "square.and.arrow.down")
+                        }
                     }
                 }
                 ToolbarItem(placement: .topBarTrailing) {
@@ -178,6 +187,24 @@ struct HomeView: View {
                 }
             )
         }
+        .sheet(isPresented: $showImportView) {
+            VideoImportView(
+                onImport: { videoURL, date in
+                    Task {
+                        if let newTake = try? await library?.importVideo(from: videoURL, for: date) {
+                            showImportView = false
+                            selectedTake = newTake
+                            viewState = .reviewing(newTake)
+                        } else {
+                            showImportView = false
+                        }
+                    }
+                },
+                onCancel: {
+                    showImportView = false
+                }
+            )
+        }
     }
     #endif
 
@@ -213,6 +240,13 @@ struct HomeView: View {
                     showCalendar = true
                 } label: {
                     Label("Calendar", systemImage: "calendar")
+                }
+
+                // Import button
+                Button {
+                    showImportView = true
+                } label: {
+                    Label("Import", systemImage: "square.and.arrow.down")
                 }
 
                 SyncStatusView(syncState: library?.syncState ?? .idle)
@@ -266,6 +300,23 @@ struct HomeView: View {
                 }
             )
             .frame(minWidth: 400, minHeight: 500)
+        }
+        .sheet(isPresented: $showImportView) {
+            VideoImportView(
+                onImport: { videoURL, date in
+                    Task {
+                        if let newTake = try? await library?.importVideo(from: videoURL, for: date) {
+                            showImportView = false
+                            selectedTake = newTake
+                        } else {
+                            showImportView = false
+                        }
+                    }
+                },
+                onCancel: {
+                    showImportView = false
+                }
+            )
         }
         .task {
             await library?.loadVideos()

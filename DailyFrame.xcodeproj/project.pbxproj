@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 63;
+	objectVersion = 77;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -22,6 +22,7 @@
 		430CE27436E9DA76F33354D4 /* ThumbnailStripView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96396494BD5512C30DBCB6A2 /* ThumbnailStripView.swift */; };
 		52D0E707B34DF83DEB1DED9C /* SyncState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0224EB66DE0E844822D253E /* SyncState.swift */; };
 		5990F5423FE62220F9090C54 /* PlatformConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = D789923971D2707F0ADB2EFD /* PlatformConfig.swift */; };
+		5C0D253DA23B9F2DC410C34C /* VideoImportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BAF50B1226B8C64781509AA /* VideoImportView.swift */; };
 		5C642AE4EFDF5AA52B38C77B /* VideoDay.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC43800ABA2A2B771763EACC /* VideoDay.swift */; };
 		63AC0260CDB142EEE5B62511 /* PlatformDetection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A5EA184D06BFD1444E8604 /* PlatformDetection.swift */; };
 		68C67B6A3882F0AED930B763 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A388B326343259B25357B184 /* HomeView.swift */; };
@@ -38,6 +39,7 @@
 		9BB334989DB9ACE78012B17E /* DailyFrameApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE15294517D93E808FD1201 /* DailyFrameApp.swift */; };
 		9C3A347D69D59123D71F7C02 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 16B50D517129CFCF49F827AA /* Assets.xcassets */; };
 		A172F133614987F44DB98F63 /* VideoLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = D193077355D94C96F9F5278E /* VideoLibrary.swift */; };
+		A6B9433496F63C4B3807A8BA /* VideoImportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BAF50B1226B8C64781509AA /* VideoImportView.swift */; };
 		AB90E9275B0444F8CE38137F /* VideoCompositionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF2E977BCA0E1842FD356C3 /* VideoCompositionService.swift */; };
 		BAD9DA3C051CB938E5C3E01B /* CameraService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E46D5AC9B264B87FDC9762 /* CameraService.swift */; };
 		BBAC92C45D1BD3148350F793 /* VideoLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = D193077355D94C96F9F5278E /* VideoLibrary.swift */; };
@@ -69,9 +71,10 @@
 		0BF2E977BCA0E1842FD356C3 /* VideoCompositionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCompositionService.swift; sourceTree = "<group>"; };
 		15836CF865FA1E417DE7EE7F /* RecordingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingView.swift; sourceTree = "<group>"; };
 		16B50D517129CFCF49F827AA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		18057BC020CE2F7F3AD2D1A5 /* DailyFrame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DailyFrame.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		18057BC020CE2F7F3AD2D1A5 /* DailyFrame-macOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "DailyFrame-macOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1AD9CF16388FD0880A7CAED8 /* iCloudSyncService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iCloudSyncService.swift; sourceTree = "<group>"; };
 		244A34E27376C3B7B148E56F /* AppError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppError.swift; sourceTree = "<group>"; };
+		2BAF50B1226B8C64781509AA /* VideoImportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoImportView.swift; sourceTree = "<group>"; };
 		2E3362A3275C9E541C6C6B07 /* PermissionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionManager.swift; sourceTree = "<group>"; };
 		31E46D5AC9B264B87FDC9762 /* CameraService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraService.swift; sourceTree = "<group>"; };
 		38BF5D2462E487A852444E56 /* MontageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MontageView.swift; sourceTree = "<group>"; };
@@ -88,7 +91,7 @@
 		A2F803BF72090F5B99366D67 /* VideoTrimmingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoTrimmingView.swift; sourceTree = "<group>"; };
 		A388B326343259B25357B184 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		A4F6252DDFFB55003E332149 /* TrimRangeSliderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrimRangeSliderView.swift; sourceTree = "<group>"; };
-		C521A5959F11E0FBF3BB2D7D /* DailyFrame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DailyFrame.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C521A5959F11E0FBF3BB2D7D /* DailyFrame-iOS.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = "DailyFrame-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CA969F0721764640424B827D /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
 		CC43800ABA2A2B771763EACC /* VideoDay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoDay.swift; sourceTree = "<group>"; };
 		D0B6E6D715EB14E23FA19721 /* VideoQAView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoQAView.swift; sourceTree = "<group>"; };
@@ -145,6 +148,7 @@
 				96396494BD5512C30DBCB6A2 /* ThumbnailStripView.swift */,
 				A4F6252DDFFB55003E332149 /* TrimRangeSliderView.swift */,
 				4755550B3EDB959EE25857FE /* VideoExportView.swift */,
+				2BAF50B1226B8C64781509AA /* VideoImportView.swift */,
 				D0B6E6D715EB14E23FA19721 /* VideoQAView.swift */,
 				A2F803BF72090F5B99366D67 /* VideoTrimmingView.swift */,
 			);
@@ -154,8 +158,8 @@
 		7F4D691EBB4B4583FFF1A7B0 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				C521A5959F11E0FBF3BB2D7D /* DailyFrame.app */,
-				18057BC020CE2F7F3AD2D1A5 /* DailyFrame.app */,
+				C521A5959F11E0FBF3BB2D7D /* DailyFrame-iOS.app */,
+				18057BC020CE2F7F3AD2D1A5 /* DailyFrame-macOS.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -233,7 +237,7 @@
 			packageProductDependencies = (
 			);
 			productName = "DailyFrame-macOS";
-			productReference = 18057BC020CE2F7F3AD2D1A5 /* DailyFrame.app */;
+			productReference = 18057BC020CE2F7F3AD2D1A5 /* DailyFrame-macOS.app */;
 			productType = "com.apple.product-type.application";
 		};
 		5146855AE6BB273C1BF06FA5 /* DailyFrame-iOS */ = {
@@ -251,7 +255,7 @@
 			packageProductDependencies = (
 			);
 			productName = "DailyFrame-iOS";
-			productReference = C521A5959F11E0FBF3BB2D7D /* DailyFrame.app */;
+			productReference = C521A5959F11E0FBF3BB2D7D /* DailyFrame-iOS.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -261,7 +265,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
-				LastUpgradeCheck = 2620;
+				LastUpgradeCheck = 1610;
 				TargetAttributes = {
 					4D87BED0BACB9C604D0A4E9B = {
 						DevelopmentTeam = KDZZFKGF55;
@@ -283,6 +287,7 @@
 			);
 			mainGroup = BBC01A1C4D4CA14F58062E1A;
 			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -337,6 +342,7 @@
 				F953CFDCCD8FA287D77949F1 /* VideoDay.swift in Sources */,
 				814E515E732E377929FF504B /* VideoExportService.swift in Sources */,
 				32E36500E0F38C9B1BD827C8 /* VideoExportView.swift in Sources */,
+				5C0D253DA23B9F2DC410C34C /* VideoImportView.swift in Sources */,
 				BBAC92C45D1BD3148350F793 /* VideoLibrary.swift in Sources */,
 				BFD1F4245A4FABD539E14330 /* VideoQAView.swift in Sources */,
 				F6A86D003858FB6C9BC2E6F8 /* VideoStorageService.swift in Sources */,
@@ -370,6 +376,7 @@
 				5C642AE4EFDF5AA52B38C77B /* VideoDay.swift in Sources */,
 				C3715C8ECD60AF611ACCFDDA /* VideoExportService.swift in Sources */,
 				7B37245408AD976DF9164025 /* VideoExportView.swift in Sources */,
+				A6B9433496F63C4B3807A8BA /* VideoImportView.swift in Sources */,
 				A172F133614987F44DB98F63 /* VideoLibrary.swift in Sources */,
 				DA45CCC65DE576E49C55734E /* VideoQAView.swift in Sources */,
 				1604E70EB5D2B6C366748106 /* VideoStorageService.swift in Sources */,
@@ -389,8 +396,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEAD_CODE_STRIPPING = YES;
-				ENABLE_HARDENED_RUNTIME = YES;
+				DEVELOPMENT_TEAM = KDZZFKGF55;
 				INFOPLIST_FILE = DailyFrame/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -414,6 +420,7 @@
 				CODE_SIGN_ENTITLEMENTS = DailyFrame/DailyFrame.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = KDZZFKGF55;
 				INFOPLIST_FILE = DailyFrame/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -462,9 +469,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = KDZZFKGF55;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
@@ -489,7 +494,6 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 6.0;
@@ -504,8 +508,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEAD_CODE_STRIPPING = YES;
-				ENABLE_HARDENED_RUNTIME = YES;
+				DEVELOPMENT_TEAM = KDZZFKGF55;
 				INFOPLIST_FILE = DailyFrame/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -529,6 +532,7 @@
 				CODE_SIGN_ENTITLEMENTS = DailyFrame/DailyFrame.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = KDZZFKGF55;
 				INFOPLIST_FILE = DailyFrame/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -577,9 +581,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = KDZZFKGF55;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
@@ -597,7 +599,6 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 6.0;

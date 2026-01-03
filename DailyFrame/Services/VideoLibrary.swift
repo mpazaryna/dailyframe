@@ -153,6 +153,30 @@ final class VideoLibrary {
         await storageService.getNextTakeNumber(for: Date())
     }
 
+    /// Imports a video from external source (e.g., Photos library) for a specific date
+    /// - Parameters:
+    ///   - tempURL: URL to the video in temp directory
+    ///   - date: The date to assign this video to
+    /// - Returns: The newly created take
+    func importVideo(from tempURL: URL, for date: Date) async throws -> VideoTake {
+        let normalizedDate = Calendar.current.startOfDay(for: date)
+        let takeNumber = await storageService.getNextTakeNumber(for: normalizedDate)
+        let savedURL = try await storageService.saveVideo(from: tempURL, for: normalizedDate, takeNumber: takeNumber)
+
+        // Clean up temp file
+        try? FileManager.default.removeItem(at: tempURL)
+
+        let newTake = VideoTake(
+            date: normalizedDate,
+            takeNumber: takeNumber,
+            videoURL: savedURL,
+            isSelected: false
+        )
+
+        await loadVideos()
+        return newTake
+    }
+
     /// Replaces a take with a trimmed version
     /// - Parameters:
     ///   - take: The original take to replace
