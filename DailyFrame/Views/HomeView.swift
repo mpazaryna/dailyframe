@@ -36,7 +36,20 @@ struct HomeView: View {
         }
     }
 
+    enum Tab {
+        case home
+        case record
+        case calendar
+    }
+
+    enum SidebarView: String, CaseIterable {
+        case videos = "Videos"
+        case calendar = "Calendar"
+    }
+
     @State private var viewState: ViewState = .home
+    @State private var selectedTab: Tab = .home
+    @State private var sidebarView: SidebarView = .videos
     @State private var showTakeSelector = false
     @State private var showExportSheet = false
     @State private var showCalendar = false
@@ -65,7 +78,7 @@ struct HomeView: View {
     private var iOSContent: some View {
         switch viewState {
         case .home:
-            iOSHomeContent
+            iOSTabContent
         case .recording:
             RecordingView(
                 onComplete: { take in
@@ -118,6 +131,121 @@ struct HomeView: View {
         }
     }
 
+    /// Tab-based content with Liquid Glass bottom bar
+    private var iOSTabContent: some View {
+        ZStack(alignment: .bottom) {
+            // Main content based on selected tab
+            Group {
+                switch selectedTab {
+                case .home:
+                    iOSHomeContent
+                case .record:
+                    // Record tab triggers recording immediately
+                    Color.clear
+                        .onAppear {
+                            viewState = .recording
+                            selectedTab = .home
+                        }
+                case .calendar:
+                    iOSCalendarContent
+                }
+            }
+
+            // Glass Tab Bar
+            glassTabBar
+        }
+    }
+
+    /// Liquid Glass bottom tab bar
+    private var glassTabBar: some View {
+        HStack(spacing: 0) {
+            // Home Tab
+            tabBarButton(
+                icon: "house.fill",
+                label: "Home",
+                isSelected: selectedTab == .home
+            ) {
+                selectedTab = .home
+            }
+
+            Spacer()
+
+            // Record Tab (prominent center button)
+            Button {
+                viewState = .recording
+            } label: {
+                ZStack {
+                    Circle()
+                        .fill(.red)
+                        .frame(width: 56, height: 56)
+                    Image(systemName: "video.fill")
+                        .font(.system(size: 22, weight: .semibold))
+                        .foregroundStyle(.white)
+                }
+                .shadow(color: .red.opacity(0.4), radius: 8, y: 4)
+            }
+            .offset(y: -8)
+
+            Spacer()
+
+            // Calendar Tab
+            tabBarButton(
+                icon: "calendar",
+                label: "Calendar",
+                isSelected: selectedTab == .calendar
+            ) {
+                selectedTab = .calendar
+            }
+        }
+        .padding(.horizontal, 32)
+        .padding(.top, 12)
+        .padding(.bottom, 8)
+        .frame(maxWidth: .infinity)
+        .background(.ultraThinMaterial)
+        .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
+        .glassEffect()
+        .padding(.horizontal, 16)
+        .padding(.bottom, 8)
+    }
+
+    private func tabBarButton(icon: String, label: String, isSelected: Bool, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            VStack(spacing: 4) {
+                Image(systemName: icon)
+                    .font(.system(size: 22, weight: isSelected ? .semibold : .regular))
+                    .foregroundStyle(isSelected ? .primary : .secondary)
+                Text(label)
+                    .font(.system(size: 10, weight: .medium))
+                    .foregroundStyle(isSelected ? .primary : .secondary)
+            }
+            .frame(width: 64)
+        }
+        .buttonStyle(.plain)
+    }
+
+    /// Calendar content for calendar tab
+    private var iOSCalendarContent: some View {
+        NavigationStack {
+            CalendarView(
+                onSelectDay: { videoDay in
+                    if let take = videoDay.selectedTake {
+                        selectedTake = take
+                        viewState = .reviewing(take)
+                    }
+                },
+                onDismiss: {
+                    selectedTab = .home
+                }
+            )
+            .navigationTitle("Calendar")
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    SyncStatusView(syncState: library?.syncState ?? .idle)
+                }
+            }
+        }
+    }
+
     private var iOSHomeContent: some View {
         NavigationStack {
             ScrollView {
@@ -148,28 +276,14 @@ struct HomeView: View {
             .navigationTitle("DailyFrame")
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    HStack(spacing: 16) {
-                        Button {
-                            showCalendar = true
-                        } label: {
-                            Image(systemName: "calendar")
-                        }
-
-                        Button {
-                            showImportView = true
-                        } label: {
-                            Image(systemName: "square.and.arrow.down")
-                        }
+                    Button {
+                        showImportView = true
+                    } label: {
+                        Image(systemName: "square.and.arrow.down")
                     }
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     SyncStatusView(syncState: library?.syncState ?? .idle)
-                }
-            }
-            .overlay(alignment: .bottom) {
-                if config.recordButtonSize > 0 {
-                    recordButton
-                        .padding(.bottom, 30)
                 }
             }
         }
@@ -187,20 +301,6 @@ struct HomeView: View {
                 }
                 .presentationDetents([.medium])
             }
-        }
-        .sheet(isPresented: $showCalendar) {
-            CalendarView(
-                onSelectDay: { videoDay in
-                    showCalendar = false
-                    if let take = videoDay.selectedTake {
-                        selectedTake = take
-                        viewState = .reviewing(take)
-                    }
-                },
-                onDismiss: {
-                    showCalendar = false
-                }
-            )
         }
         .sheet(isPresented: $showImportView) {
             VideoImportView(
@@ -250,13 +350,6 @@ struct HomeView: View {
         }
         .toolbar {
             ToolbarItemGroup(placement: .primaryAction) {
-                // Calendar button
-                Button {
-                    showCalendar = true
-                } label: {
-                    Label("Calendar", systemImage: "calendar")
-                }
-
                 // Import button
                 Button {
                     showImportView = true
@@ -302,20 +395,6 @@ struct HomeView: View {
                 .frame(minWidth: 600, minHeight: 450)
             }
         }
-        .sheet(isPresented: $showCalendar) {
-            CalendarView(
-                onSelectDay: { videoDay in
-                    showCalendar = false
-                    if let take = videoDay.selectedTake {
-                        selectedTake = take
-                    }
-                },
-                onDismiss: {
-                    showCalendar = false
-                }
-            )
-            .frame(minWidth: 400, minHeight: 500)
-        }
         .sheet(isPresented: $showImportView) {
             VideoImportView(
                 onImport: { videoURL, date in
@@ -355,10 +434,16 @@ struct HomeView: View {
 
     private var macOSSidebar: some View {
         VStack(spacing: 0) {
+            // Segmented picker header
             HStack {
-                Text("Videos")
-                    .font(.headline)
-                Spacer()
+                Picker("View", selection: $sidebarView) {
+                    ForEach(SidebarView.allCases, id: \.self) { view in
+                        Text(view.rawValue).tag(view)
+                    }
+                }
+                .pickerStyle(.segmented)
+                .labelsHidden()
+
                 Button {
                     Task { await library?.refresh() }
                 } label: {
@@ -368,8 +453,8 @@ struct HomeView: View {
             }
             .padding()
 
-            // Hero stats for macOS
-            if let library = library, !library.allVideos.isEmpty {
+            // Hero stats for macOS (only in videos view)
+            if sidebarView == .videos, let library = library, !library.allVideos.isEmpty {
                 macOSStatsBanner
                     .padding(.horizontal)
                     .padding(.bottom, 8)
@@ -377,12 +462,31 @@ struct HomeView: View {
 
             Divider()
 
-            if library?.allVideos.isEmpty ?? true {
-                macOSEmptyState
-            } else {
-                macOSVideoList
+            // Content based on selected view
+            switch sidebarView {
+            case .videos:
+                if library?.allVideos.isEmpty ?? true {
+                    macOSEmptyState
+                } else {
+                    macOSVideoList
+                }
+            case .calendar:
+                macOSSidebarCalendar
             }
         }
+    }
+
+    private var macOSSidebarCalendar: some View {
+        CalendarView(
+            onSelectDay: { videoDay in
+                if let take = videoDay.selectedTake {
+                    selectedTake = take
+                }
+            },
+            onDismiss: {
+                sidebarView = .videos
+            }
+        )
     }
 
     private var macOSStatsBanner: some View {
@@ -903,23 +1007,6 @@ struct HomeView: View {
             .clipShape(RoundedRectangle(cornerRadius: config.cardCornerRadius))
         }
         .buttonStyle(.plain)
-    }
-
-    private var recordButton: some View {
-        Button {
-            viewState = .recording
-        } label: {
-            ZStack {
-                Circle()
-                    .fill(.red)
-                    .frame(width: config.recordButtonSize, height: config.recordButtonSize)
-                Image(systemName: "video.fill")
-                    .font(.system(size: config.recordButtonIconSize, weight: .medium))
-                    .foregroundStyle(.white)
-            }
-            .shadow(color: .red.opacity(0.4), radius: 10, y: 5)
-        }
-        .glassEffect()
     }
 
     private var takeSelectorSheet: some View {
