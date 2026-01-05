@@ -135,6 +135,8 @@ struct HomeLayoutConfig {
     let usesSidebarNavigation: Bool
     /// Maximum content width (0 = full width)
     let maxContentWidth: CGFloat
+    /// Number of columns for recent videos grid (1 = list, 2+ = grid)
+    let recentVideosColumns: Int
 
     #if os(iOS)
     static func current(_ sizeClass: UserInterfaceSizeClass?) -> Self {
@@ -155,7 +157,8 @@ struct HomeLayoutConfig {
                 thumbnailWidth: 72,
                 thumbnailHeight: 48,
                 usesSidebarNavigation: false,
-                maxContentWidth: 600
+                maxContentWidth: 700,
+                recentVideosColumns: 2
             )
             : Self(  // iPhone
                 cardPadding: base.cardPadding,
@@ -172,7 +175,8 @@ struct HomeLayoutConfig {
                 thumbnailWidth: 56,
                 thumbnailHeight: 40,
                 usesSidebarNavigation: false,
-                maxContentWidth: 0
+                maxContentWidth: 0,
+                recentVideosColumns: 1
             )
     }
     #else
@@ -193,7 +197,8 @@ struct HomeLayoutConfig {
             thumbnailWidth: 80,
             thumbnailHeight: 54,
             usesSidebarNavigation: true,
-            maxContentWidth: 0
+            maxContentWidth: 0,
+            recentVideosColumns: 1  // macOS uses sidebar, not grid
         )
     }
     #endif

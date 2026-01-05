@@ -122,15 +122,17 @@ struct HomeView: View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: config.sectionSpacing) {
+                    heroStatsBanner
+
                     todayStatusCard
+
+                    // Montage card - prominent position (show when 2+ videos)
+                    if let library = library, library.allVideos.count >= 2 {
+                        montageCard
+                    }
 
                     if let library = library, !library.allVideos.isEmpty {
                         recentVideosSection
-
-                        // Montage card (show when 2+ videos)
-                        if library.allVideos.count >= 2 {
-                            montageCard
-                        }
                     }
 
                     Spacer(minLength: 120)
@@ -366,6 +368,13 @@ struct HomeView: View {
             }
             .padding()
 
+            // Hero stats for macOS
+            if let library = library, !library.allVideos.isEmpty {
+                macOSStatsBanner
+                    .padding(.horizontal)
+                    .padding(.bottom, 8)
+            }
+
             Divider()
 
             if library?.allVideos.isEmpty ?? true {
@@ -374,6 +383,46 @@ struct HomeView: View {
                 macOSVideoList
             }
         }
+    }
+
+    private var macOSStatsBanner: some View {
+        HStack(spacing: 16) {
+            // Days count
+            HStack(spacing: 4) {
+                Image(systemName: "film.fill")
+                    .font(.system(size: 12))
+                    .foregroundStyle(.secondary)
+                Text("\(library?.allVideos.count ?? 0)")
+                    .font(.system(size: 13, weight: .semibold))
+                    .contentTransition(.numericText())
+                Text("days")
+                    .font(.system(size: 11))
+                    .foregroundStyle(.secondary)
+            }
+
+            // Streak
+            HStack(spacing: 4) {
+                Image(systemName: (library?.currentStreak ?? 0) > 0 ? "flame.fill" : "flame")
+                    .font(.system(size: 12))
+                    .foregroundStyle((library?.currentStreak ?? 0) > 0 ? .orange : .secondary)
+                    .contentTransition(.symbolEffect(.replace))
+                Text("\(library?.currentStreak ?? 0)")
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundStyle((library?.currentStreak ?? 0) > 0 ? .orange : .primary)
+                    .contentTransition(.numericText())
+                Text("streak")
+                    .font(.system(size: 11))
+                    .foregroundStyle(.secondary)
+            }
+
+            Spacer()
+        }
+        .padding(.vertical, 8)
+        .padding(.horizontal, 10)
+        .background(.quaternary.opacity(0.5))
+        .clipShape(RoundedRectangle(cornerRadius: 8))
+        .animation(.spring(duration: 0.3), value: library?.allVideos.count)
+        .animation(.spring(duration: 0.3), value: library?.currentStreak)
     }
 
     private var macOSEmptyState: some View {
@@ -505,6 +554,78 @@ struct HomeView: View {
 
     // MARK: - Shared Components
 
+    // MARK: - Hero Stats Banner
+
+    @ViewBuilder
+    private var heroStatsBanner: some View {
+        if let library = library, !library.allVideos.isEmpty {
+            HStack(spacing: 0) {
+                // Total days stat
+                statItem(
+                    icon: "film.fill",
+                    value: "\(library.allVideos.count)",
+                    label: library.allVideos.count == 1 ? "day" : "days"
+                )
+
+                Divider()
+                    .frame(height: 32)
+                    .padding(.horizontal, 16)
+
+                // Streak stat (with flame when active)
+                statItem(
+                    icon: library.currentStreak > 0 ? "flame.fill" : "flame",
+                    value: "\(library.currentStreak)",
+                    label: "streak",
+                    accentColor: library.currentStreak > 0 ? .orange : nil
+                )
+
+                Spacer()
+
+                // Motivational nudge
+                if library.currentStreak > 0 && !library.hasTodaysTakes {
+                    Text("Keep it going!")
+                        .font(.system(size: config.captionFontSize, weight: .medium))
+                        .foregroundStyle(.orange)
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 5)
+                        .background(.orange.opacity(0.15))
+                        .clipShape(Capsule())
+                        .transition(.scale.combined(with: .opacity))
+                } else if library.currentStreak >= 7 {
+                    Text("On fire! 🔥")
+                        .font(.system(size: config.captionFontSize, weight: .medium))
+                        .foregroundStyle(.orange)
+                        .transition(.scale.combined(with: .opacity))
+                }
+            }
+            .padding(.horizontal, config.cardPadding)
+            .padding(.vertical, 12)
+            .frame(maxWidth: .infinity)
+            .background(.ultraThinMaterial.opacity(0.8))
+            .clipShape(RoundedRectangle(cornerRadius: config.cardCornerRadius))
+            .transition(.move(edge: .top).combined(with: .opacity))
+            .animation(.spring(duration: 0.4, bounce: 0.2), value: library.allVideos.count)
+            .animation(.spring(duration: 0.3), value: library.currentStreak)
+        }
+    }
+
+    private func statItem(icon: String, value: String, label: String, accentColor: Color? = nil) -> some View {
+        HStack(spacing: 8) {
+            Image(systemName: icon)
+                .font(.system(size: 16, weight: .semibold))
+                .foregroundStyle(accentColor ?? .secondary)
+
+            VStack(alignment: .leading, spacing: 0) {
+                Text(value)
+                    .font(.system(size: config.headlineFontSize, weight: .bold))
+                    .foregroundStyle(accentColor ?? .primary)
+                Text(label)
+                    .font(.system(size: config.captionFontSize - 1, weight: .medium))
+                    .foregroundStyle(.secondary)
+            }
+        }
+    }
+
     #if os(iOS)
     private var todayStatusCard: some View {
         HStack(spacing: 14) {
@@ -555,15 +676,37 @@ struct HomeView: View {
     }
 
     private var recentVideosSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("Recent")
-                .font(.system(size: config.headlineFontSize, weight: .medium))
-                .foregroundStyle(.secondary)
+        VStack(alignment: .leading, spacing: 16) {
+            ForEach(library?.groupedVideos ?? []) { group in
+                videoGroupSection(group: group)
+            }
+        }
+    }
+
+    private func videoGroupSection(group: VideoGroup) -> some View {
+        VStack(alignment: .leading, spacing: 10) {
+            // Section header
+            Text(group.title)
+                .font(.system(size: config.headlineFontSize, weight: .semibold))
+                .foregroundStyle(.primary)
                 .padding(.horizontal, 4)
 
-            LazyVStack(spacing: 8) {
-                ForEach(library?.allVideos.prefix(7) ?? []) { video in
-                    videoDayRow(video: video)
+            if config.recentVideosColumns > 1 {
+                // Grid layout for iPad
+                LazyVGrid(
+                    columns: Array(repeating: GridItem(.flexible(), spacing: 12), count: config.recentVideosColumns),
+                    spacing: 12
+                ) {
+                    ForEach(group.videos) { video in
+                        videoDayCard(video: video)
+                    }
+                }
+            } else {
+                // List layout for iPhone
+                LazyVStack(spacing: 8) {
+                    ForEach(group.videos) { video in
+                        videoDayRow(video: video)
+                    }
                 }
             }
         }
@@ -637,14 +780,32 @@ struct HomeView: View {
             }
         } label: {
             HStack(spacing: 12) {
-                RoundedRectangle(cornerRadius: 8)
-                    .fill(.quaternary)
-                    .frame(width: config.thumbnailWidth, height: config.thumbnailHeight)
-                    .overlay {
+                // Video thumbnail
+                if let videoURL = video.videoURL {
+                    VideoThumbnailView(
+                        videoURL: videoURL,
+                        size: CGSize(width: config.thumbnailWidth, height: config.thumbnailHeight)
+                    )
+                    .overlay(alignment: .bottomTrailing) {
+                        // Play indicator overlay
                         Image(systemName: "play.fill")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
+                            .font(.system(size: 8))
+                            .foregroundStyle(.white)
+                            .padding(4)
+                            .background(.black.opacity(0.5))
+                            .clipShape(Circle())
+                            .padding(4)
                     }
+                } else {
+                    RoundedRectangle(cornerRadius: 8)
+                        .fill(.quaternary)
+                        .frame(width: config.thumbnailWidth, height: config.thumbnailHeight)
+                        .overlay {
+                            Image(systemName: "play.fill")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                }
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text(video.displayDate)
@@ -670,6 +831,74 @@ struct HomeView: View {
                 }
             }
             .padding(12)
+            .background(.ultraThinMaterial)
+            .clipShape(RoundedRectangle(cornerRadius: config.cardCornerRadius))
+        }
+        .buttonStyle(.plain)
+    }
+
+    /// Card-style layout for iPad grid view
+    private func videoDayCard(video: VideoDay) -> some View {
+        Button {
+            if video.takeCount > 1 {
+                selectedDayForTakes = video
+            } else if let take = video.selectedTake {
+                selectedTake = take
+                viewState = .reviewing(take)
+            }
+        } label: {
+            VStack(alignment: .leading, spacing: 8) {
+                // Large thumbnail
+                if let videoURL = video.videoURL {
+                    VideoThumbnailView(
+                        videoURL: videoURL,
+                        size: CGSize(width: 160, height: 100)
+                    )
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 100)
+                    .clipped()
+                    .overlay(alignment: .bottomTrailing) {
+                        Image(systemName: "play.fill")
+                            .font(.system(size: 10))
+                            .foregroundStyle(.white)
+                            .padding(5)
+                            .background(.black.opacity(0.5))
+                            .clipShape(Circle())
+                            .padding(6)
+                    }
+                    .overlay(alignment: .topLeading) {
+                        if video.takeCount > 1 {
+                            HStack(spacing: 3) {
+                                Image(systemName: "film.stack.fill")
+                                    .font(.system(size: 9))
+                                Text("\(video.takeCount)")
+                                    .font(.system(size: 10, weight: .semibold))
+                            }
+                            .foregroundStyle(.white)
+                            .padding(.horizontal, 6)
+                            .padding(.vertical, 3)
+                            .background(.black.opacity(0.6))
+                            .clipShape(Capsule())
+                            .padding(6)
+                        }
+                    }
+                } else {
+                    RoundedRectangle(cornerRadius: 8)
+                        .fill(.quaternary)
+                        .frame(height: 100)
+                        .overlay {
+                            Image(systemName: "play.fill")
+                                .foregroundStyle(.secondary)
+                        }
+                }
+
+                // Date label
+                Text(video.displayDate)
+                    .font(.system(size: config.bodyFontSize, weight: .medium))
+                    .foregroundStyle(.primary)
+                    .lineLimit(1)
+            }
+            .padding(10)
             .background(.ultraThinMaterial)
             .clipShape(RoundedRectangle(cornerRadius: config.cardCornerRadius))
         }

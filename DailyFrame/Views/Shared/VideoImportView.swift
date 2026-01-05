@@ -4,42 +4,55 @@ import PhotosUI
 
 // MARK: - Shared Components
 
-/// Simple video thumbnail preview
+/// Async-loading video thumbnail view with caching
 struct VideoThumbnailView: View {
     let videoURL: URL
-    @State private var thumbnail: CGImage?
+    var size: CGSize = CGSize(width: 200, height: 200)
+
+    @State private var image: Image?
+    @State private var isLoading = true
 
     var body: some View {
-        Group {
-            if let thumbnail = thumbnail {
-                Image(decorative: thumbnail, scale: 1.0)
+        ZStack {
+            if let image = image {
+                image
                     .resizable()
                     .aspectRatio(contentMode: .fill)
+                    .transition(.opacity.animation(.easeIn(duration: 0.2)))
             } else {
+                // Placeholder
                 Rectangle()
-                    .fill(.ultraThinMaterial)
+                    .fill(.quaternary)
                     .overlay {
-                        ProgressView()
+                        if isLoading {
+                            ProgressView()
+                                .scaleEffect(0.6)
+                        } else {
+                            Image(systemName: "play.fill")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
                     }
             }
         }
-        .task {
+        .task(id: videoURL) {
             await loadThumbnail()
         }
     }
 
     private func loadThumbnail() async {
-        let asset = AVURLAsset(url: videoURL)
-        let generator = AVAssetImageGenerator(asset: asset)
-        generator.appliesPreferredTrackTransform = true
-        generator.maximumSize = CGSize(width: 400, height: 400)
+        isLoading = true
+        defer { isLoading = false }
 
-        do {
-            let (image, _) = try await generator.image(at: .zero)
-            thumbnail = image
-        } catch {
-            // Leave as loading state
+        guard let platformImage = await ThumbnailService.shared.thumbnail(for: videoURL, size: size) else {
+            return
         }
+
+        #if os(iOS)
+        image = Image(uiImage: platformImage)
+        #else
+        image = Image(nsImage: platformImage)
+        #endif
     }
 }
 

@@ -17,6 +17,7 @@
 		18D2F839180B1042EC0349EF /* AppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 244A34E27376C3B7B148E56F /* AppError.swift */; };
 		2AC31C3556D01DE1C3BB2D9C /* RecordingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15836CF865FA1E417DE7EE7F /* RecordingView.swift */; };
 		32E36500E0F38C9B1BD827C8 /* VideoExportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4755550B3EDB959EE25857FE /* VideoExportView.swift */; };
+		37F3D069BE626553230F83F0 /* ThumbnailService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB7D2909E0DC3BFB1B577B0 /* ThumbnailService.swift */; };
 		3BB4F18B2CAC9F61156E79A5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF0A7823D25B10D7C86E897 /* AppDelegate.swift */; };
 		3F112CECBF74046F859EE9EA /* RecordingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15836CF865FA1E417DE7EE7F /* RecordingView.swift */; };
 		430CE27436E9DA76F33354D4 /* ThumbnailStripView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96396494BD5512C30DBCB6A2 /* ThumbnailStripView.swift */; };
@@ -40,6 +41,7 @@
 		9C3A347D69D59123D71F7C02 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 16B50D517129CFCF49F827AA /* Assets.xcassets */; };
 		A172F133614987F44DB98F63 /* VideoLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = D193077355D94C96F9F5278E /* VideoLibrary.swift */; };
 		A6B9433496F63C4B3807A8BA /* VideoImportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BAF50B1226B8C64781509AA /* VideoImportView.swift */; };
+		AADC16A99BE67C8E821AC65A /* ThumbnailService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB7D2909E0DC3BFB1B577B0 /* ThumbnailService.swift */; };
 		AB90E9275B0444F8CE38137F /* VideoCompositionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF2E977BCA0E1842FD356C3 /* VideoCompositionService.swift */; };
 		BAD9DA3C051CB938E5C3E01B /* CameraService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E46D5AC9B264B87FDC9762 /* CameraService.swift */; };
 		BBAC92C45D1BD3148350F793 /* VideoLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = D193077355D94C96F9F5278E /* VideoLibrary.swift */; };
@@ -76,6 +78,7 @@
 		244A34E27376C3B7B148E56F /* AppError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppError.swift; sourceTree = "<group>"; };
 		2BAF50B1226B8C64781509AA /* VideoImportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoImportView.swift; sourceTree = "<group>"; };
 		2E3362A3275C9E541C6C6B07 /* PermissionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionManager.swift; sourceTree = "<group>"; };
+		2FB7D2909E0DC3BFB1B577B0 /* ThumbnailService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailService.swift; sourceTree = "<group>"; };
 		31E46D5AC9B264B87FDC9762 /* CameraService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraService.swift; sourceTree = "<group>"; };
 		38BF5D2462E487A852444E56 /* MontageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MontageView.swift; sourceTree = "<group>"; };
 		4755550B3EDB959EE25857FE /* VideoExportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoExportView.swift; sourceTree = "<group>"; };
@@ -179,6 +182,7 @@
 			children = (
 				31E46D5AC9B264B87FDC9762 /* CameraService.swift */,
 				1AD9CF16388FD0880A7CAED8 /* iCloudSyncService.swift */,
+				2FB7D2909E0DC3BFB1B577B0 /* ThumbnailService.swift */,
 				0BF2E977BCA0E1842FD356C3 /* VideoCompositionService.swift */,
 				0658AE0DA80B736ABFE69C1D /* VideoExportService.swift */,
 				D193077355D94C96F9F5278E /* VideoLibrary.swift */,
@@ -336,6 +340,7 @@
 				2AC31C3556D01DE1C3BB2D9C /* RecordingView.swift in Sources */,
 				C526AB98253831F24507A867 /* SyncState.swift in Sources */,
 				184C2F41236C33525514FB48 /* SyncStatusView.swift in Sources */,
+				AADC16A99BE67C8E821AC65A /* ThumbnailService.swift in Sources */,
 				D3EBA1A7BBB10C40A7348632 /* ThumbnailStripView.swift in Sources */,
 				83DFF5966D9C24DB58BF4A65 /* TrimRangeSliderView.swift in Sources */,
 				12C0AE648F2F1F988ADD4819 /* VideoCompositionService.swift in Sources */,
@@ -370,6 +375,7 @@
 				3F112CECBF74046F859EE9EA /* RecordingView.swift in Sources */,
 				52D0E707B34DF83DEB1DED9C /* SyncState.swift in Sources */,
 				9385B6C14124C212EA838D1F /* SyncStatusView.swift in Sources */,
+				37F3D069BE626553230F83F0 /* ThumbnailService.swift in Sources */,
 				430CE27436E9DA76F33354D4 /* ThumbnailStripView.swift in Sources */,
 				C87477513DBF557371756C2F /* TrimRangeSliderView.swift in Sources */,
 				AB90E9275B0444F8CE38137F /* VideoCompositionService.swift in Sources */,

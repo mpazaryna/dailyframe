@@ -1,5 +1,12 @@
 import Foundation
 
+/// Represents a group of videos with a title (e.g., "This Week", "Last Week", "December 2024")
+struct VideoGroup: Identifiable {
+    let id = UUID()
+    let title: String
+    let videos: [VideoDay]
+}
+
 /// Represents a single video take
 struct VideoTake: Identifiable, Equatable, Hashable {
     let id: UUID

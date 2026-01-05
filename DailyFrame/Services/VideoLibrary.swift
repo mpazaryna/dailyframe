@@ -72,6 +72,68 @@ final class VideoLibrary {
         allVideos.last?.date
     }
 
+    /// Videos grouped by time period (This Week, Last Week, Earlier this month, etc.)
+    var groupedVideos: [VideoGroup] {
+        guard !allVideos.isEmpty else { return [] }
+
+        let calendar = Calendar.current
+        let now = Date()
+        let startOfToday = calendar.startOfDay(for: now)
+
+        // Calculate week boundaries
+        let startOfThisWeek = calendar.date(from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: now))!
+        let startOfLastWeek = calendar.date(byAdding: .weekOfYear, value: -1, to: startOfThisWeek)!
+        let startOfThisMonth = calendar.date(from: calendar.dateComponents([.year, .month], from: now))!
+
+        var thisWeek: [VideoDay] = []
+        var lastWeek: [VideoDay] = []
+        var earlierThisMonth: [VideoDay] = []
+        var olderByMonth: [Date: [VideoDay]] = [:]
+
+        for video in allVideos {
+            // Skip today's video (shown separately in todayStatusCard)
+            if calendar.isDate(video.date, inSameDayAs: startOfToday) {
+                continue
+            }
+
+            if video.date >= startOfThisWeek {
+                thisWeek.append(video)
+            } else if video.date >= startOfLastWeek {
+                lastWeek.append(video)
+            } else if video.date >= startOfThisMonth {
+                earlierThisMonth.append(video)
+            } else {
+                // Group by month for older videos
+                let monthStart = calendar.date(from: calendar.dateComponents([.year, .month], from: video.date))!
+                olderByMonth[monthStart, default: []].append(video)
+            }
+        }
+
+        var groups: [VideoGroup] = []
+
+        if !thisWeek.isEmpty {
+            groups.append(VideoGroup(title: "This Week", videos: thisWeek))
+        }
+        if !lastWeek.isEmpty {
+            groups.append(VideoGroup(title: "Last Week", videos: lastWeek))
+        }
+        if !earlierThisMonth.isEmpty {
+            groups.append(VideoGroup(title: "Earlier This Month", videos: earlierThisMonth))
+        }
+
+        // Add older months sorted by date (most recent first)
+        let monthFormatter = DateFormatter()
+        monthFormatter.dateFormat = "MMMM yyyy"
+
+        for monthStart in olderByMonth.keys.sorted(by: >) {
+            if let videos = olderByMonth[monthStart], !videos.isEmpty {
+                groups.append(VideoGroup(title: monthFormatter.string(from: monthStart), videos: videos))
+            }
+        }
+
+        return groups
+    }
+
     // MARK: - Initialization
 
     private func setupSyncObserver() {
