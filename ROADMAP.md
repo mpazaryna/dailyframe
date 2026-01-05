@@ -38,6 +38,7 @@ Record daily videos with immediate quality review.
 
 **Status**: Production
 **Platform**: All
+**Roadmap**: [docs/roadmap/home-experience.md](docs/roadmap/home-experience.md)
 
 Browse, organize, and manage video history.
 
@@ -51,6 +52,7 @@ Browse, organize, and manage video history.
 
 **Key Docs**:
 - ADR: [004-platform-config-pattern](docs/adr/004-platform-config-pattern.md)
+- Roadmap: [home-experience.md](docs/roadmap/home-experience.md)
 
 ---
 
@@ -123,6 +125,7 @@ Export videos as standard MOV files.
 
 | Type | Location | Purpose |
 |------|----------|---------|
+| **Roadmaps** | `docs/roadmap/` | Detailed feature status and plans |
 | **ADRs** | `docs/adr/` | Why decisions were made |
 | **Specs** | `docs/spec/` | Feature specifications |
 | **Devlogs** | `docs/devlog/` | Development narrative |
@@ -136,8 +139,9 @@ When starting a new feature:
 
 1. Create spec in `docs/spec/{feature}.md` if complex
 2. Create ADR in `docs/adr/` for significant decisions
-3. Update this roadmap with status
-4. Add entry to CHANGELOG.md when shipped
+3. Create detailed roadmap in `docs/roadmap/{feature}.md` for major efforts
+4. Update this index with status and links
+5. Add entry to CHANGELOG.md when shipped
 
 ---
 
