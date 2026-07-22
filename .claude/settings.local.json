@@ -3,7 +3,10 @@
     "allow": [
       "Bash(open -a Simulator)",
       "Bash(xcrun simctl install:*)",
-      "Bash(xcrun simctl spawn:*)"
+      "Bash(xcrun simctl spawn:*)",
+      "Bash(xcodebuild -project DailyFrame.xcodeproj -scheme DailyFrame-iOS -destination 'platform=iOS Simulator,name=iPhone 17' build)",
+      "Bash(xcrun --sdk iphoneos --show-sdk-path)",
+      "Bash(grep -rn Configuration __CMDSUB_OUTPUT__/System/Library/Frameworks/AVFoundation.framework/Headers/AVVideoComposition.h)"
     ]
   }
 }

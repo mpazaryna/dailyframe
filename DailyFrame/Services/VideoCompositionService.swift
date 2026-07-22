@@ -88,8 +88,13 @@ actor VideoCompositionService {
 
         // Track video settings for consistent output
         var naturalSize: CGSize = .zero
-        var videoInstructions: [AVMutableVideoCompositionLayerInstruction] = []
         var montageClips: [MontageClip] = []
+
+        // A single layer instruction covers the whole composition track; each clip
+        // contributes a transform keyed to the time it starts.
+        var layerConfiguration = AVVideoCompositionLayerInstruction.Configuration(
+            trackID: videoTrack.trackID
+        )
 
         for (day, take) in videosWithTakes {
             let asset = AVURLAsset(url: take.videoURL)
@@ -119,14 +124,12 @@ actor VideoCompositionService {
                 try videoTrack.insertTimeRange(timeRange, of: assetVideoTrack, at: currentTime)
 
                 // Handle video orientation via layer instruction
-                let instruction = AVMutableVideoCompositionLayerInstruction(assetTrack: videoTrack)
                 let transform = try await assetVideoTrack.load(.preferredTransform)
                 let trackSize = try await assetVideoTrack.load(.naturalSize)
 
                 // Calculate transform to normalize orientation
                 let normalizedTransform = normalizeTransform(transform, trackSize: trackSize, outputSize: naturalSize)
-                instruction.setTransform(normalizedTransform, at: currentTime)
-                videoInstructions.append(instruction)
+                layerConfiguration.setTransform(normalizedTransform, at: currentTime)
 
                 // Track clip timing for date overlay
                 let startSeconds = CMTimeGetSeconds(currentTime)
@@ -156,14 +159,20 @@ actor VideoCompositionService {
         let totalDuration = CMTimeGetSeconds(currentTime)
 
         // Create video composition for orientation handling
-        let videoComposition = AVMutableVideoComposition()
-        videoComposition.renderSize = naturalSize
-        videoComposition.frameDuration = CMTime(value: 1, timescale: 30)
+        var instructionConfiguration = AVVideoCompositionInstruction.Configuration()
+        instructionConfiguration.timeRange = CMTimeRange(start: .zero, duration: currentTime)
+        instructionConfiguration.layerInstructions = [
+            AVVideoCompositionLayerInstruction(configuration: layerConfiguration)
+        ]
 
-        let mainInstruction = AVMutableVideoCompositionInstruction()
-        mainInstruction.timeRange = CMTimeRange(start: .zero, duration: currentTime)
-        mainInstruction.layerInstructions = videoInstructions
-        videoComposition.instructions = [mainInstruction]
+        var compositionConfiguration = AVVideoComposition.Configuration()
+        compositionConfiguration.renderSize = naturalSize
+        compositionConfiguration.frameDuration = CMTime(value: 1, timescale: 30)
+        compositionConfiguration.instructions = [
+            AVVideoCompositionInstruction(configuration: instructionConfiguration)
+        ]
+
+        let videoComposition = AVVideoComposition(configuration: compositionConfiguration)
 
         // Export
         let outputURL = FileManager.default.temporaryDirectory
@@ -179,26 +188,15 @@ actor VideoCompositionService {
             throw AppError.compositionFailed("Failed to create export session")
         }
 
-        exportSession.outputURL = outputURL
-        exportSession.outputFileType = .mov
         exportSession.videoComposition = videoComposition
 
-        await exportSession.export()
+        try await exportSession.export(to: outputURL, as: .mov)
 
-        switch exportSession.status {
-        case .completed:
-            return MontageResult(
-                videoURL: outputURL,
-                clips: montageClips,
-                totalDuration: totalDuration
-            )
-        case .failed:
-            throw exportSession.error ?? AppError.compositionFailed("Export failed")
-        case .cancelled:
-            throw AppError.compositionFailed("Export cancelled")
-        default:
-            throw AppError.compositionFailed("Unknown export error")
-        }
+        return MontageResult(
+            videoURL: outputURL,
+            clips: montageClips,
+            totalDuration: totalDuration
+        )
     }
 
     /// Trims a video to the specified time range
@@ -238,22 +236,11 @@ actor VideoCompositionService {
             throw AppError.compositionFailed("Failed to create export session")
         }
 
-        exportSession.outputURL = outputURL
-        exportSession.outputFileType = .mov
         exportSession.timeRange = timeRange
 
-        await exportSession.export()
+        try await exportSession.export(to: outputURL, as: .mov)
 
-        switch exportSession.status {
-        case .completed:
-            return outputURL
-        case .failed:
-            throw exportSession.error ?? AppError.compositionFailed("Trim export failed")
-        case .cancelled:
-            throw AppError.compositionFailed("Trim export cancelled")
-        default:
-            throw AppError.compositionFailed("Unknown trim export error")
-        }
+        return outputURL
     }
 
     /// Generates thumbnail images from a video at specified intervals

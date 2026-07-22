@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Migrated `VideoCompositionService` to the iOS 26 AVFoundation APIs
+  - `AVVideoComposition.Configuration` replaces `AVMutableVideoComposition`
+  - `AVVideoCompositionInstruction.Configuration` replaces `AVMutableVideoCompositionInstruction`
+  - `AVVideoCompositionLayerInstruction.Configuration` replaces `AVMutableVideoCompositionLayerInstruction`
+  - `export(to:as:)` replaces the deprecated `export()` / `status` / `error` polling
+  - Export failures now propagate the underlying AVFoundation error instead of a
+    generic `AppError.compositionFailed` string
+
+### Fixed
+- Montage orientation: per-clip transforms were built as separate layer instructions
+  all targeting the same composition track, so only the first clip's transform took
+  effect and later clips inherited it. Now a single layer instruction carries a
+  transform keyed to each clip's start time.
+
 ## [0.1.0] - 2026-01-05
 
 ### Added
